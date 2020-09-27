@@ -1,0 +1,173 @@
+@import "./bulma-calendar.min.css";
+
+/**
+Custom CSS overwrite bulma
+ */
+*:focus {
+  outline: none !important;
+}
+
+.calendar {
+  border: solid 1px #e0e0e0;
+}
+
+.calendar .calendar-nav {
+  font-size: .9rem;
+  background-color: white;
+  color: #222222;
+  font-family: sans-serif;
+  font-weight: 600;
+}
+
+.button {
+  cursor: pointer;
+  background: transparent;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 18px;
+  border: solid 0px #e0e0e0;
+}
+
+.calendar .calendar-header .calendar-date {
+  color: #222222;
+  font-size: .85rem;
+  font-family: sans-serif;
+}
+
+.calendar .footer-calendar {
+  padding: 0 .5rem .5rem .5rem;
+  background-color: white;
+  color: #222222;
+  font-size: .85rem;
+  font-family: sans-serif;
+}
+
+.input-date-funny {
+  width: 150px;
+}
+
+.input-date-funny.funny-range {
+  width: 300px;
+}
+
+.calendar-body, .calendar .calendar-header {
+  border-bottom: solid 1px #f7f7f7;
+}
+
+.calendar input:checked + .slider {
+  background-color: #b9b9b9 !important;
+}
+
+.input-hour {
+  width: 90%;
+  background-color: #f9f9f9;
+  border: solid 1px #f7f7f7;
+  padding: 5px;
+  font-size: 1rem;
+}
+
+label.switch {
+  width: 50px !important;
+  height: 25px !important;
+}
+
+.slider.round:before {
+  height: 17px !important;
+  width: 17px !important;
+}
+
+.label-placeholder {
+  /*padding: 0rem 0.5rem 0.2rem;*/
+  text-align: left;
+}
+
+.footer-calendar .divider {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  border-bottom: solid 1px #f7f7f7;
+  padding: .5rem;
+}
+
+.footer-calendar .divider:last-child {
+  border-bottom: solid 0px transparent;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-start {
+  justify-content: start;
+}
+
+.pt-25 {
+  padding-top: .25rem;
+}
+
+.pl-25 {
+  padding-left: .25rem;
+}
+
+.pr-25 {
+  padding-right: .25rem;
+}
+
+small {
+  font-size: 80%;
+}
+
+.options-bar {
+  padding: .5rem 0 .25rem;
+}
+
+.label-option {
+  display: flex;
+  align-items: center;
+}
+
+.zone-preview-dates {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.zone-preview-dates .child {
+  height: 55px;
+  /*background-color: red;*/
+  align-items: center;
+  display: flex;
+  text-align: left;
+  align-content: center;
+}
+.zone-preview-dates .child:first-child {
+  width: 55%;
+}
+.zone-preview-dates .child:last-child {
+  width: 45%;
+}
+.calendar-child-day {
+  font-size: 2rem;
+  padding: 0.25rem 0.5rem 0.25rem 0;
+}
+
+.calendar-child-week {
+  color: gray;
+  font-size: 85%;
+}
+
+.calendar .calendar-date .date-item.is-active {
+  background: #3B3B98;
+  border-color: #3B3B98;
+}
+.calendar .calendar-date .date-item.is-today {
+  background: 0 0;
+  border-color: #3B3B98;
+  color: #3B3B98;
+}
+.calendar .calendar-range::before {
+  background: #f1f1f1
+}
+
+.calendar .calendar-range .date-item {
+  color: #969696;
+}

@@ -1,0 +1,172 @@
+<!-- ********* INPUT FROM DATE Collaborator https://github.com/leifermendez ***************** --->
+
+<input (click)="openCalendar()" readonly spellcheck="false" class="omit-trigger-outside input-date-funny"
+       autocomplete="nope"
+       [ngClass]="{'bg-blue': mode === 'start' && includeEndDate, 'bg-red': isInvalid, 'funny-range':includeEndDate }"
+       type="text" [value]="inputValueOutput">
+
+<!--- *************** CALENDAR ELEMENTS Author https://github.com/mokshithpyla ************* --->
+<div (clickOutside)="closeCalendar()" class="calendar" *ngIf="isOpen">
+  <div class="calendar-nav">
+    <div class="calendar-nav-previous-month">
+      <button class="button is-text" (click)="changeNavMonth(-1)" [disabled]="!canAccessPrevious">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+    </div>
+    <div>{{navDate.format('MMMM YYYY')}}</div>
+    <div class="calendar-nav-next-month">
+      <button class="button is-text" (click)="changeNavMonth(1)" [disabled]="!canAccessNext">
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <div class="calendar-date" *ngFor="let day of weekDaysHeaderArr">
+        {{day}}
+      </div>
+    </div>
+    <div class="calendar-body" *ngIf="includeEndDate; else notRange">
+      <ng-container *ngIf="gridArr">
+        <div *ngFor="let day of gridArr[currentYear][currentMonth]"
+             class="calendar-date calendar-day-not-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}"
+             [ngClass]="{
+          'is-disabled': !day.available,
+          'calendar-range': day.inRange,
+          'calendar-range-start': day.value === startDay?.value &&  day.month === startDay?.month && day.year === startDay?.year ,
+          'calendar-range-end': day.value === endDay?.value && day.month === endDay?.month && day.year === endDay?.year}">
+          <button *ngIf="day.value !== 0" class="date-item"
+                  [ngClass]="{'is-active': day.isActive, 'is-today': day.isToday}" (click)="selectDay(day)">
+            {{day.value}}</button>
+          <button *ngIf="day.value === 0" class="date-item"></button>
+        </div>
+      </ng-container>
+    </div>
+    <ng-template #notRange>
+      <div class="calendar-body">
+        <div *ngFor="let day of gridArr[currentYear][currentMonth]"
+             class="calendar-date calendar-day-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}"
+             [ngClass]="{'is-disabled': !day.available }">
+          <button *ngIf="day.value !== 0" class="date-item"
+                  [ngClass]="{'is-active': day.isActive, 'is-today': day.isToday}"
+                  (click)="selectDay(day)">{{day.value}}</button>
+          <button *ngIf="day.value === 0" class="date-item"></button>
+        </div>
+      </div>
+    </ng-template>
+    <div class="footer-calendar">
+      <div class="flex justify-content-between options-bar divider">
+        <div class="flex">
+          <div class="label-placeholder label-option pr-25">
+            <input type="checkbox" [(ngModel)]="includeEndDate" (change)="handleModeChange()">
+            <small>RANGO</small>
+          </div>
+          <div class="label-placeholder label-option pr-25">
+            <input
+              (change)="reFormatInput();handleTimeChange(startTime, startDate, 'start');handleTimeChange(endTime, endDate, 'end')"
+              [(ngModel)]="includeTime" type="checkbox">
+            <small>HORAS</small>
+          </div>
+        </div>
+        <div class="label-placeholder label-option pr-25">
+          <div (click)="clear()">Limpiar</div>
+        </div>
+      </div>
+      <div class="zone-preview-dates divider">
+        <div class="child">
+          <div class="calendar-child-day">{{startDate?.format('D')}}</div>
+          <div>
+            <div class="calendar-child-month">{{startDate?.format('MMMM YYYY')}}</div>
+            <div class="calendar-child-week">{{startDate?.format('dddd')}}</div>
+          </div>
+        </div>
+        <div class="child">
+          <input #startTimePicker type="text" class="input-hour" autocomplete="nope" spellcheck="false"
+                 [ngModel]="startDate.format('h:mm A')" *ngIf="startDate && includeTime"
+                 (ngModelChange)="setStartTime($event)" (blur)="handleTimeChange(startTime, startDate, 'start')"
+                 (keyup.enter)="handleTimeChange(startTime, startDate, 'start')">
+        </div>
+      </div>
+      <div class="zone-preview-dates divider" *ngIf="includeEndDate">
+        <div class="child">
+          <div class="calendar-child-day">{{endDate?.format('D')}}</div>
+          <div>
+            <div class="calendar-child-month">{{endDate?.format('MMMM YYYY')}}</div>
+            <div class="calendar-child-week">{{endDate?.format('dddd')}}</div>
+          </div>
+        </div>
+        <div class="child">
+          <ng-container *ngIf="endDate">
+            <input #endTimePicker type="text" class="input-hour" autocomplete="nope" spellcheck="false"
+                   [ngModel]="endDate.format('h:mm A')"
+                   (ngModelChange)="setEndTime($event)" *ngIf="isRange && includeTime"
+                   (blur)="handleTimeChange(endTime, endDate, 'end')"
+                   (keyup.enter)="handleTimeChange(endTime, endDate, 'end')">
+          </ng-container>
+        </div>
+      </div>
+      <!--      -->
+      <!--      <div class="divider" *ngIf="hasTime">-->
+      <!--        <div class="label-placeholder">-->
+      <!--          <small>FROM</small>-->
+      <!--        </div>-->
+      <!--        <div class="justify-content-between flex pt-25">-->
+      <!--          <div class=" align-left">-->
+      <!--            <div *ngIf="includeTime" class=" align-right">-->
+      <!--              <div *ngIf="startDate">-->
+      <!--                <input #startTimePicker type="text" class="input-hour" autocomplete="nope" spellcheck="false"-->
+      <!--                       [ngModel]="startDate.format('h:mm A')"-->
+      <!--                       (ngModelChange)="setStartTime($event)" (blur)="handleTimeChange(startTime, startDate, 'start')"-->
+      <!--                       (keyup.enter)="handleTimeChange(startTime, startDate, 'start')">-->
+      <!--              </div>-->
+      <!--              <div *ngIf="!startDate" class=" align-right">-->
+      <!--                &#45;&#45;-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class=" align-right">-->
+      <!--            <label class="switch">-->
+      <!--              <input type="checkbox" (change)="reFormatInput()" [(ngModel)]="includeTime">-->
+      <!--              <span class="slider round"></span>-->
+      <!--            </label>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <!--      <div class="divider" *ngIf="isRange">-->
+      <!--        <div class="label-placeholder">-->
+      <!--          <small>TO</small>-->
+      <!--        </div>-->
+      <!--        <div class=" justify-content-between flex pt-25">-->
+      <!--          <div class=" align-left ">-->
+      <!--            <div *ngIf="includeTime" class=" align-right">-->
+      <!--              <div *ngIf="endDate">-->
+      <!--                <input #endTimePicker type="text" class="input-hour" autocomplete="nope" spellcheck="false"-->
+      <!--                       [ngModel]="endDate.format('h:mm A')"-->
+      <!--                       (ngModelChange)="setEndTime($event)"-->
+      <!--                       (blur)="handleTimeChange(endTime, endDate, 'end')"-->
+      <!--                       (keyup.enter)="handleTimeChange(endTime, endDate, 'end')">-->
+      <!--              </div>-->
+      <!--              <div *ngIf="!endDate" class=" align-right">-->
+      <!--                &#45;&#45;-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div class=" align-right">-->
+      <!--            <label class="switch">-->
+      <!--              <input type="checkbox" [(ngModel)]="includeEndDate" (change)="handleModeChange()">-->
+      <!--              <span class="slider round"></span>-->
+      <!--            </label>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
+
+      <!--      <div class="divider">-->
+      <!--        <button type="button" class="datetimepicker-footer-clear has-text-danger button is-small is-text"-->
+      <!--                (click)="clear()">Clear All-->
+      <!--        </button>-->
+      <!--      </div>-->
+
+    </div>
+  </div>
+</div>
