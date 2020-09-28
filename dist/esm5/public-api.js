@@ -1,0 +1,11 @@
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/*
+ * Public API Surface of ngx-funny-datepicker
+ */
+export { NgxFunnyDatepickerService } from './lib/ngx-funny-datepicker.service';
+export { NgxFunnyDatepickerComponent } from './lib/ngx-funny-datepicker.component';
+export { NgxFunnyDatepickerModule } from './lib/ngx-funny-datepicker.module';
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljLWFwaS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL25neC1mdW5ueS1kYXRlcGlja2VyLyIsInNvdXJjZXMiOlsicHVibGljLWFwaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7O0FBSUEsMENBQWMsb0NBQW9DLENBQUM7QUFDbkQsNENBQWMsc0NBQXNDLENBQUM7QUFDckQseUNBQWMsbUNBQW1DLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxuICogUHVibGljIEFQSSBTdXJmYWNlIG9mIG5neC1mdW5ueS1kYXRlcGlja2VyXG4gKi9cblxuZXhwb3J0ICogZnJvbSAnLi9saWIvbmd4LWZ1bm55LWRhdGVwaWNrZXIuc2VydmljZSc7XG5leHBvcnQgKiBmcm9tICcuL2xpYi9uZ3gtZnVubnktZGF0ZXBpY2tlci5jb21wb25lbnQnO1xuZXhwb3J0ICogZnJvbSAnLi9saWIvbmd4LWZ1bm55LWRhdGVwaWNrZXIubW9kdWxlJztcbiJdfQ==

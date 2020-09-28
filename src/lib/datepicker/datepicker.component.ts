@@ -1,5 +1,6 @@
-import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
-import * as moment from 'moment';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import * as moment_ from 'moment';
+const moment = moment_;
 
 @Component({
   selector: 'funny-datepicker-single',
@@ -27,7 +28,7 @@ export class DatepickerComponent implements OnInit {
   selectedDate: any;
   canAccessPrevious = true;
   canAccessNext = true;
-  todayDate = moment().set({hour: 0, minute: 0, second: 0, millisecond: 0});
+  todayDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
   startDay: any;
   endDay: any;
   mode = 'end';
@@ -155,7 +156,7 @@ export class DatepickerComponent implements OnInit {
 
   isToday(num: number, month: number, year: number): boolean {
     const dateToCheck = moment(this.dateFromDayAndMonthAndYear(num, month, year));
-    return dateToCheck.isSame(moment().set({hour: 0, minute: 0, second: 0, millisecond: 0}));
+    return dateToCheck.isSame(moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
   }
 
   dateFromNum(num: number, referenceDate: any): any {
@@ -226,7 +227,7 @@ export class DatepickerComponent implements OnInit {
   generateDate(day: any, date: any) {
     let generatedDate = this.dateFromDayAndMonthAndYear(day.value, day.month, day.year);
     if (date) {
-      generatedDate = generatedDate.set({hour: date.hour(), minute: date.minute()});
+      generatedDate = generatedDate.set({ hour: date.hour(), minute: date.minute() });
     }
     return generatedDate;
   }
@@ -253,9 +254,9 @@ export class DatepickerComponent implements OnInit {
   }
 
   dateFromDayAndMonthAndYear(day, month, year) {
-    let timeObject = {hour: 0, minute: 0, second: 0, millisecond: 0};
+    let timeObject = { hour: 0, minute: 0, second: 0, millisecond: 0 };
     if (this.includeTime) {
-      timeObject = {hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0};
+      timeObject = { hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0 };
       this.startDate.format('h:mm A');
     }
     return moment([year, month, day]).set(timeObject);
@@ -355,7 +356,7 @@ export class DatepickerComponent implements OnInit {
   }
 
   setTime(moment, hour: number = 0, minute: number = 0) {
-    return moment.set({hour, minute, second: 0, millisecond: 0});
+    return moment.set({ hour, minute, second: 0, millisecond: 0 });
   }
 
   handleModeChange() {
@@ -405,7 +406,7 @@ export class DatepickerComponent implements OnInit {
       return;
     }
     time = time.replace(/[^a-zA-Z0-9]/g, '');
-    moment.set({hour: 0, minute: 0, second: 0, millisecond: 0});
+    moment.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     let lastTwo = time.substr(time.length - 2).toUpperCase();
     let last = time.substr(time.length - 1).toUpperCase();
     const hasLastTwo = ['AM', 'PM'].includes(lastTwo);
@@ -425,7 +426,7 @@ export class DatepickerComponent implements OnInit {
       case 1:
         moment
           = isAm ? this.setTime(moment, Number(time)) :
-          this.setTime(moment, Number(time) + 12);
+            this.setTime(moment, Number(time) + 12);
         break;
       case 2:
         if (last >= 6) {
@@ -435,15 +436,15 @@ export class DatepickerComponent implements OnInit {
         if (time === 12) {
           moment
             = isAm ? this.setTime(moment, 0) :
-            this.setTime(moment, 12);
+              this.setTime(moment, 12);
         } else if (time < 12) {
           moment
             = isAm ? this.setTime(moment, Number(time)) :
-            this.setTime(moment, Number(time) + 12);
+              this.setTime(moment, Number(time) + 12);
         } else {
           moment
             = isAm ? this.setTime(moment, Number(time[0]), Number(last)) :
-            this.setTime(moment, Number(time[0]) + 12, Number(last));
+              this.setTime(moment, Number(time[0]) + 12, Number(last));
         }
         break;
       case 3:
@@ -453,7 +454,7 @@ export class DatepickerComponent implements OnInit {
         } else {
           moment
             = isAm ? this.setTime(moment, Number(time[0]), Number(lastTwo)) :
-            this.setTime(moment, Number(time[0]) + 12, Number(lastTwo));
+              this.setTime(moment, Number(time[0]) + 12, Number(lastTwo));
         }
         break;
       case 4:

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Component({
-  selector: 'lib-ngx-funny-datepicker',
+  selector: 'ngx-funny-datepicker',
   template: `
     <funny-datepicker-single
       [isRange]="isRange"
