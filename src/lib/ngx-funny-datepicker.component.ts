@@ -1,29 +1,26 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
-  selector: 'ngx-funny-datepicker',
+  selector: 'ngx-funny-datepicker-dummy',
   template: `
-    <funny-datepicker-single
-      [isRange]="isRange"
-      [hasTime]="hasTime"
-      [startDate]="startDate"
-      [endDate]="endDate"
-      [maxDate]="maxDate"
-      [minDate]="minDate"
-      (emitSelected)="emitValue($event)"
-    ></funny-datepicker-single>
-
+    Please use ngx-funny-datepicker
   `,
   styles: []
 })
 export class NgxFunnyDatepickerComponent implements OnInit {
   @Output() valueDate = new EventEmitter<any>();
-  isRange = true;
-  hasTime = true;
-  startDate: any;
-  endDate: any;
-  maxDate: any;
-  minDate: any;
+  @Input() isRange: boolean;
+  @Input() hasTime: boolean;
+  @Input() startDate: any = moment();
+  @Input() endDate: any;
+  @Input() minDate: any;
+  @Input() maxDate: any;
+  @Input() locale = 'en';
+  @Input() rangeLabel = 'Range';
+  @Input() timeLabel = 'Time';
+  @Input() clearLabel = 'Clear';
+  @Input() classInput: string;
 
   constructor() {
   }

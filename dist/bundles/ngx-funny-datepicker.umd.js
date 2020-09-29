@@ -1,95 +1,92 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('moment'), require('@angular/common'), require('@angular/forms')) :
-    typeof define === 'function' && define.amd ? define('ngx-funny-datepicker', ['exports', '@angular/core', 'moment', '@angular/common', '@angular/forms'], factory) :
-    (global = global || self, factory(global['ngx-funny-datepicker'] = {}, global.ng.core, global.moment_, global.ng.common, global.ng.forms));
-}(this, (function (exports, core, moment_, common, forms) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('moment'), require('@angular/forms'), require('@angular/common')) :
+    typeof define === 'function' && define.amd ? define('ngx-funny-datepicker', ['exports', '@angular/core', 'moment', '@angular/forms', '@angular/common'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global['ngx-funny-datepicker'] = {}, global.ng.core, global.moment$1, global.ng.forms, global.ng.common));
+}(this, (function (exports, i0, moment$1, forms, common) { 'use strict';
 
-    /**
-     * @fileoverview added by tsickle
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
+    function _interopNamespace(e) {
+        if (e && e.__esModule) { return e; } else {
+            var n = Object.create(null);
+            if (e) {
+                Object.keys(e).forEach(function (k) {
+                    if (k !== 'default') {
+                        var d = Object.getOwnPropertyDescriptor(e, k);
+                        Object.defineProperty(n, k, d.get ? d : {
+                            enumerable: true,
+                            get: function () {
+                                return e[k];
+                            }
+                        });
+                    }
+                });
+            }
+            n['default'] = e;
+            return Object.freeze(n);
+        }
+    }
+
+    var moment__namespace = /*#__PURE__*/_interopNamespace(moment$1);
+
     var NgxFunnyDatepickerService = /** @class */ (function () {
         function NgxFunnyDatepickerService() {
         }
-        NgxFunnyDatepickerService.decorators = [
-            { type: core.Injectable, args: [{
-                        providedIn: 'root'
-                    },] }
-        ];
-        /** @nocollapse */
-        NgxFunnyDatepickerService.ctorParameters = function () { return []; };
-        /** @nocollapse */ NgxFunnyDatepickerService.ngInjectableDef = core.ɵɵdefineInjectable({ factory: function NgxFunnyDatepickerService_Factory() { return new NgxFunnyDatepickerService(); }, token: NgxFunnyDatepickerService, providedIn: "root" });
         return NgxFunnyDatepickerService;
     }());
+    NgxFunnyDatepickerService.ɵprov = i0.ɵɵdefineInjectable({ factory: function NgxFunnyDatepickerService_Factory() { return new NgxFunnyDatepickerService(); }, token: NgxFunnyDatepickerService, providedIn: "root" });
+    NgxFunnyDatepickerService.decorators = [
+        { type: i0.Injectable, args: [{
+                    providedIn: 'root'
+                },] }
+    ];
+    NgxFunnyDatepickerService.ctorParameters = function () { return []; };
 
-    /**
-     * @fileoverview added by tsickle
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
     var NgxFunnyDatepickerComponent = /** @class */ (function () {
         function NgxFunnyDatepickerComponent() {
             var _this = this;
-            this.valueDate = new core.EventEmitter();
-            this.isRange = true;
-            this.hasTime = true;
-            this.emitValue = (/**
-             * @param {?} data
-             * @return {?}
-             */
-            function (data) { return _this.valueDate.emit(data); });
+            this.valueDate = new i0.EventEmitter();
+            this.startDate = moment__namespace();
+            this.locale = 'en';
+            this.rangeLabel = 'Range';
+            this.timeLabel = 'Time';
+            this.clearLabel = 'Clear';
+            this.emitValue = function (data) { return _this.valueDate.emit(data); };
         }
-        /**
-         * @return {?}
-         */
-        NgxFunnyDatepickerComponent.prototype.ngOnInit = /**
-         * @return {?}
-         */
-        function () {
-        };
-        NgxFunnyDatepickerComponent.decorators = [
-            { type: core.Component, args: [{
-                        selector: 'ngx-funny-datepicker',
-                        template: "\n    <funny-datepicker-single\n      [isRange]=\"isRange\"\n      [hasTime]=\"hasTime\"\n      [startDate]=\"startDate\"\n      [endDate]=\"endDate\"\n      [maxDate]=\"maxDate\"\n      [minDate]=\"minDate\"\n      (emitSelected)=\"emitValue($event)\"\n    ></funny-datepicker-single>\n\n  "
-                    }] }
-        ];
-        /** @nocollapse */
-        NgxFunnyDatepickerComponent.ctorParameters = function () { return []; };
-        NgxFunnyDatepickerComponent.propDecorators = {
-            valueDate: [{ type: core.Output }]
+        NgxFunnyDatepickerComponent.prototype.ngOnInit = function () {
         };
         return NgxFunnyDatepickerComponent;
     }());
-    if (false) {
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.valueDate;
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.isRange;
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.hasTime;
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.startDate;
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.endDate;
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.maxDate;
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.minDate;
-        /** @type {?} */
-        NgxFunnyDatepickerComponent.prototype.emitValue;
-    }
+    NgxFunnyDatepickerComponent.decorators = [
+        { type: i0.Component, args: [{
+                    selector: 'ngx-funny-datepicker-dummy',
+                    template: "\n    Please use ngx-funny-datepicker\n  "
+                },] }
+    ];
+    NgxFunnyDatepickerComponent.ctorParameters = function () { return []; };
+    NgxFunnyDatepickerComponent.propDecorators = {
+        valueDate: [{ type: i0.Output }],
+        isRange: [{ type: i0.Input }],
+        hasTime: [{ type: i0.Input }],
+        startDate: [{ type: i0.Input }],
+        endDate: [{ type: i0.Input }],
+        minDate: [{ type: i0.Input }],
+        maxDate: [{ type: i0.Input }],
+        locale: [{ type: i0.Input }],
+        rangeLabel: [{ type: i0.Input }],
+        timeLabel: [{ type: i0.Input }],
+        clearLabel: [{ type: i0.Input }],
+        classInput: [{ type: i0.Input }]
+    };
 
-    /**
-     * @fileoverview added by tsickle
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /** @type {?} */
-    var moment = moment_;
+    var moment = moment__namespace;
     var DatepickerComponent = /** @class */ (function () {
         function DatepickerComponent() {
             var _this = this;
-            this.startDate = moment();
-            this.emitSelected = new core.EventEmitter();
+            this.value = '';
             this.locale = 'en';
+            this.rangeLabel = 'Range';
+            this.timeLabel = 'Time';
+            this.clearLabel = 'Clear';
+            this.emitSelected = new i0.EventEmitter();
             this.weekDaysHeaderArr = [];
             this.gridArr = {};
             this.canAccessPrevious = true;
@@ -98,54 +95,38 @@
             this.mode = 'end';
             this.isInvalid = false;
             this.formatInputDate = 'D MMM, YYYY';
-            this.concatValueInput = (/**
-             * @return {?}
-             */
-            function () {
-                /** @type {?} */
+            this.onChange = function (_) { };
+            this.onTouch = function () {
+                _this.onTouched = true;
+            };
+            this.concatValueInput = function () {
                 var concatValue = [
                     _this.startDate.format(_this.formatInputDate),
                     (_this.endDate) ? '  -  ' : '',
                     (_this.endDate) ? _this.endDate.format(_this.formatInputDate) : ''
                 ];
-                _this.inputValueOutput = concatValue.join('');
-            });
-            this.reFormatInput = (/**
-             * @return {?}
-             */
-            function () {
+                _this.value = concatValue.join('');
+                _this.isInvalid = !(_this.value.length);
+            };
+            this.reFormatInput = function () {
                 _this.concatValueInput();
                 _this.formatInputDate = (_this.includeTime) ? 'D MMM, YYYY h:mm A' : 'D MMM, YYYY';
-            });
-            this.simulateClick = (/**
-             * @param {?} date
-             * @return {?}
-             */
-            function (date) {
+            };
+            this.simulateClick = function (date) {
                 try {
-                    setTimeout((/**
-                     * @return {?}
-                     */
-                    function () {
-                        /** @type {?} */
-                        var getDayNext = (/** @type {?} */ (document.querySelector(".calendar-day-not-range-" + date + " > button")));
+                    setTimeout(function () {
+                        var getDayNext = document.querySelector(".calendar-day-not-range-" + date + " > button");
                         if (getDayNext) {
                             getDayNext.click();
                         }
-                    }), 50);
+                    }, 50);
                 }
                 catch (e) {
                     return null;
                 }
-            });
+            };
         }
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.ngOnInit = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.ngOnInit = function () {
             this.setOptions();
             moment.locale(this.locale);
             if (!this.startDate) {
@@ -156,37 +137,48 @@
             this.currentMonth = this.navDate.month();
             this.currentYear = this.navDate.year();
             this.makeGrid(this.currentYear, this.currentMonth);
-            this.concatValueInput();
+            this.isInvalid = !(this.value.length);
+            // this.concatValueInput();
         };
         /**
-         * @return {?}
+         *
+         * controlValueAccessor
          */
-        DatepickerComponent.prototype.setOptions = /**
-         * @return {?}
+        DatepickerComponent.prototype.onInput = function (value) {
+            this.value = value;
+            this.onTouch();
+            this.onChange(this.value);
+        };
+        DatepickerComponent.prototype.writeValue = function (value) {
+            if (value) {
+                this.value = value || '';
+            }
+            else {
+                this.value = '';
+            }
+        };
+        DatepickerComponent.prototype.registerOnChange = function (fn) {
+            this.onChange = fn;
+        };
+        DatepickerComponent.prototype.registerOnTouched = function (fn) {
+            this.onTouch = fn;
+        };
+        DatepickerComponent.prototype.setDisabledState = function (isDisabled) {
+            this.isDisabled = isDisabled;
+        };
+        /**
+         *
+         * @param value
          */
-        function () {
+        DatepickerComponent.prototype.setOptions = function () {
             this.includeEndDate = false;
             this.includeTime = false;
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.setAccess = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.setAccess = function () {
             this.canAccessPrevious = this.canChangeNavMonth(-1);
             this.canAccessNext = this.canChangeNavMonth(1);
         };
-        /**
-         * @param {?} num
-         * @return {?}
-         */
-        DatepickerComponent.prototype.changeNavMonth = /**
-         * @param {?} num
-         * @return {?}
-         */
-        function (num) {
+        DatepickerComponent.prototype.changeNavMonth = function (num) {
             if (this.canChangeNavMonth(num)) {
                 this.navDate.add(num, 'month');
                 this.currentMonth = this.navDate.month();
@@ -194,63 +186,23 @@
                 this.makeGrid(this.currentYear, this.currentMonth);
             }
         };
-        /**
-         * @param {?} num
-         * @return {?}
-         */
-        DatepickerComponent.prototype.canChangeNavMonth = /**
-         * @param {?} num
-         * @return {?}
-         */
-        function (num) {
-            /** @type {?} */
+        DatepickerComponent.prototype.canChangeNavMonth = function (num) {
             var clonedDate = moment(this.navDate);
             return this.canChangeNavMonthLogic(num, clonedDate);
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.makeHeader = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.makeHeader = function () {
             var _this = this;
-            /** @type {?} */
             var weekDaysArr = [0, 1, 2, 3, 4, 5, 6];
-            weekDaysArr.forEach((/**
-             * @param {?} day
-             * @return {?}
-             */
-            function (day) { return _this.weekDaysHeaderArr.push(moment().weekday(day).format('ddd')); }));
+            weekDaysArr.forEach(function (day) { return _this.weekDaysHeaderArr.push(moment().weekday(day).format('ddd')); });
         };
-        /**
-         * @param {?} date
-         * @return {?}
-         */
-        DatepickerComponent.prototype.getDimensions = /**
-         * @param {?} date
-         * @return {?}
-         */
-        function (date) {
-            /** @type {?} */
+        DatepickerComponent.prototype.getDimensions = function (date) {
             var firstDayDate = moment(date).startOf('month');
             this.initialEmptyCells = firstDayDate.weekday();
-            /** @type {?} */
             var lastDayDate = moment(date).endOf('month');
             this.lastEmptyCells = 6 - lastDayDate.weekday();
             this.arrayLength = this.initialEmptyCells + this.lastEmptyCells + date.daysInMonth();
         };
-        /**
-         * @param {?} year
-         * @param {?} month
-         * @return {?}
-         */
-        DatepickerComponent.prototype.makeGrid = /**
-         * @param {?} year
-         * @param {?} month
-         * @return {?}
-         */
-        function (year, month) {
+        DatepickerComponent.prototype.makeGrid = function (year, month) {
             if (!this.gridArr.hasOwnProperty(year)) {
                 this.gridArr[year] = {};
             }
@@ -258,7 +210,6 @@
                 this.gridArr[year][month] = [];
                 this.getDimensions(this.navDate);
                 for (var i = 0; i < this.arrayLength; i++) {
-                    /** @type {?} */
                     var obj = {};
                     if (i < this.initialEmptyCells || i > this.initialEmptyCells + this.navDate.daysInMonth() - 1) {
                         obj.value = 0;
@@ -291,64 +242,22 @@
             }
             this.setAccess();
         };
-        /**
-         * @param {?} num
-         * @return {?}
-         */
-        DatepickerComponent.prototype.isAvailable = /**
-         * @param {?} num
-         * @return {?}
-         */
-        function (num) {
-            /** @type {?} */
+        DatepickerComponent.prototype.isAvailable = function (num) {
             var dateToCheck = this.dateFromNum(num, this.navDate);
             return this.isAvailableLogic(dateToCheck);
         };
-        /**
-         * @param {?} num
-         * @param {?} month
-         * @param {?} year
-         * @return {?}
-         */
-        DatepickerComponent.prototype.isToday = /**
-         * @param {?} num
-         * @param {?} month
-         * @param {?} year
-         * @return {?}
-         */
-        function (num, month, year) {
-            /** @type {?} */
+        DatepickerComponent.prototype.isToday = function (num, month, year) {
             var dateToCheck = moment(this.dateFromDayAndMonthAndYear(num, month, year));
             return dateToCheck.isSame(moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
         };
-        /**
-         * @param {?} num
-         * @param {?} referenceDate
-         * @return {?}
-         */
-        DatepickerComponent.prototype.dateFromNum = /**
-         * @param {?} num
-         * @param {?} referenceDate
-         * @return {?}
-         */
-        function (num, referenceDate) {
-            /** @type {?} */
+        DatepickerComponent.prototype.dateFromNum = function (num, referenceDate) {
             var returnDate = moment(referenceDate);
             return returnDate.date(num);
         };
-        /**
-         * @param {?} day
-         * @return {?}
-         */
-        DatepickerComponent.prototype.selectDay = /**
-         * @param {?} day
-         * @return {?}
-         */
-        function (day) {
+        DatepickerComponent.prototype.selectDay = function (day) {
             if (day.available) {
                 this.selectedDate = this.dateFromDayAndMonthAndYear(day.value, day.month, day.year);
                 if (this.includeEndDate) {
-                    /** @type {?} */
                     var currDate = this.dateFromDayAndMonthAndYear(day.value, day.month, day.year);
                     switch (this.mode) {
                         case 'end':
@@ -404,95 +313,35 @@
                 this.reFormatInput();
             }
         };
-        /**
-         * @param {?} day
-         * @param {?} date
-         * @return {?}
-         */
-        DatepickerComponent.prototype.generateDate = /**
-         * @param {?} day
-         * @param {?} date
-         * @return {?}
-         */
-        function (day, date) {
-            /** @type {?} */
+        DatepickerComponent.prototype.generateDate = function (day, date) {
             var generatedDate = this.dateFromDayAndMonthAndYear(day.value, day.month, day.year);
             if (date) {
                 generatedDate = generatedDate.set({ hour: date.hour(), minute: date.minute() });
             }
             return generatedDate;
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.resetRange = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.resetRange = function () {
             var _this = this;
-            Object.keys(this.gridArr).forEach((/**
-             * @param {?} year
-             * @return {?}
-             */
-            function (year) {
-                Object.keys(_this.gridArr[year]).forEach((/**
-                 * @param {?} month
-                 * @return {?}
-                 */
-                function (month) {
-                    _this.gridArr[year][month].map((/**
-                     * @param {?} day
-                     * @return {?}
-                     */
-                    function (day) {
+            Object.keys(this.gridArr).forEach(function (year) {
+                Object.keys(_this.gridArr[year]).forEach(function (month) {
+                    _this.gridArr[year][month].map(function (day) {
                         day.inRange = false;
                         day.isActive = false;
-                    }));
-                }));
-            }));
+                    });
+                });
+            });
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.resetActivity = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.resetActivity = function () {
             var _this = this;
-            Object.keys(this.gridArr).forEach((/**
-             * @param {?} year
-             * @return {?}
-             */
-            function (year) {
-                Object.keys(_this.gridArr[year]).forEach((/**
-                 * @param {?} month
-                 * @return {?}
-                 */
-                function (month) {
-                    _this.gridArr[year][month].map((/**
-                     * @param {?} day
-                     * @return {?}
-                     */
-                    function (day) {
+            Object.keys(this.gridArr).forEach(function (year) {
+                Object.keys(_this.gridArr[year]).forEach(function (month) {
+                    _this.gridArr[year][month].map(function (day) {
                         day.isActive = false;
-                    }));
-                }));
-            }));
+                    });
+                });
+            });
         };
-        /**
-         * @param {?} day
-         * @param {?} month
-         * @param {?} year
-         * @return {?}
-         */
-        DatepickerComponent.prototype.dateFromDayAndMonthAndYear = /**
-         * @param {?} day
-         * @param {?} month
-         * @param {?} year
-         * @return {?}
-         */
-        function (day, month, year) {
-            /** @type {?} */
+        DatepickerComponent.prototype.dateFromDayAndMonthAndYear = function (day, month, year) {
             var timeObject = { hour: 0, minute: 0, second: 0, millisecond: 0 };
             if (this.includeTime) {
                 timeObject = { hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0 };
@@ -500,39 +349,19 @@
             }
             return moment([year, month, day]).set(timeObject);
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.applyRange = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.applyRange = function () {
             var _this = this;
             this.getDimensions(this.startDate);
-            /** @type {?} */
             var start = this.initialEmptyCells + this.startDay.value - 1;
-            /** @type {?} */
             var startMonthLength = this.arrayLength;
             this.getDimensions(this.endDate);
-            /** @type {?} */
             var endMonthLength = this.arrayLength;
-            /** @type {?} */
             var end = this.initialEmptyCells + this.endDay.value - 1;
             this.resetRange();
             if (this.startDay.month !== this.endDay.month || this.startDay.year !== this.endDay.year) {
-                Object.keys(this.gridArr).forEach((/**
-                 * @param {?} year
-                 * @return {?}
-                 */
-                function (year) {
-                    /** @type {?} */
+                Object.keys(this.gridArr).forEach(function (year) {
                     var calendar = _this.gridArr[year];
-                    Object.keys(calendar).forEach((/**
-                     * @param {?} month
-                     * @return {?}
-                     */
-                    function (month) {
-                        /** @type {?} */
+                    Object.keys(calendar).forEach(function (month) {
                         var days = _this.gridArr[year][month];
                         if (month == _this.startDay.month && year == _this.startDay.year) {
                             for (var i = 0; i < start; i++) {
@@ -551,19 +380,13 @@
                             }
                         }
                         else if ((month > _this.startDay.month || year > _this.startDay.year) && (month < _this.endDay.month || year < _this.endDay.year)) {
-                            days.forEach((/**
-                             * @param {?} day
-                             * @return {?}
-                             */
-                            function (day) { return day.inRange = true; }));
+                            days.forEach(function (day) { return day.inRange = true; });
                         }
-                    }));
-                }));
+                    });
+                });
             }
             else {
-                /** @type {?} */
                 var month = this.startDay.month;
-                /** @type {?} */
                 var year = this.startDay.year;
                 for (var i = 0; i < start; i++) {
                     this.gridArr[year][month][i].inRange = false;
@@ -576,15 +399,7 @@
                 }
             }
         };
-        /**
-         * @param {?} dateToCheck
-         * @return {?}
-         */
-        DatepickerComponent.prototype.isAvailableLogic = /**
-         * @param {?} dateToCheck
-         * @return {?}
-         */
-        function (dateToCheck) {
+        DatepickerComponent.prototype.isAvailableLogic = function (dateToCheck) {
             if (this.minDate || this.maxDate) {
                 return !(dateToCheck.isBefore(this.minDate) || dateToCheck.isAfter(this.maxDate));
             }
@@ -592,69 +407,28 @@
                 return !dateToCheck.isBefore(moment(), 'day');
             }
         };
-        /**
-         * @param {?} num
-         * @param {?} currentDate
-         * @return {?}
-         */
-        DatepickerComponent.prototype.canChangeNavMonthLogic = /**
-         * @param {?} num
-         * @param {?} currentDate
-         * @return {?}
-         */
-        function (num, currentDate) {
+        DatepickerComponent.prototype.canChangeNavMonthLogic = function (num, currentDate) {
             currentDate.add(num, 'month');
-            /** @type {?} */
             var minDate = this.minDate ? this.minDate : moment().add(-1, 'month');
-            /** @type {?} */
             var maxDate = this.maxDate ? this.maxDate : moment().add(1, 'year');
             return currentDate.isBetween(minDate, maxDate);
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.toggleCalendar = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.toggleCalendar = function () {
             this.isOpen = !this.isOpen;
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.openCalendar = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.openCalendar = function () {
             this.isOpen = true;
+            this.onTouch();
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.closeCalendar = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.closeCalendar = function () {
             this.isOpen = false;
+            this.emitSelected.emit(this.selected);
         };
-        /**
-         * @param {?} mode
-         * @return {?}
-         */
-        DatepickerComponent.prototype.changeMode = /**
-         * @param {?} mode
-         * @return {?}
-         */
-        function (mode) {
+        DatepickerComponent.prototype.changeMode = function (mode) {
             this.mode = mode;
+            this.onTouch();
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.clear = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.clear = function () {
             this.resetRange();
             this.startDate = moment();
             this.endDate = null;
@@ -667,31 +441,14 @@
             this.endTime = null;
             this.mode = 'start';
             this.makeGrid(this.currentYear, this.currentMonth);
+            this.reFormatInput();
         };
-        /**
-         * @param {?} moment
-         * @param {?=} hour
-         * @param {?=} minute
-         * @return {?}
-         */
-        DatepickerComponent.prototype.setTime = /**
-         * @param {?} moment
-         * @param {?=} hour
-         * @param {?=} minute
-         * @return {?}
-         */
-        function (moment, hour, minute) {
+        DatepickerComponent.prototype.setTime = function (moment, hour, minute) {
             if (hour === void 0) { hour = 0; }
             if (minute === void 0) { minute = 0; }
             return moment.set({ hour: hour, minute: minute, second: 0, millisecond: 0 });
         };
-        /**
-         * @return {?}
-         */
-        DatepickerComponent.prototype.handleModeChange = /**
-         * @return {?}
-         */
-        function () {
+        DatepickerComponent.prototype.handleModeChange = function () {
             this.resetRange();
             this.mode = 'end';
             if (this.startDay) {
@@ -704,69 +461,30 @@
                 this.endDay.isActive = false;
             }
             else {
-                /** @type {?} */
                 var tmpStartDate = this.startDate.clone();
-                /** @type {?} */
                 var nextDay = tmpStartDate.add(2, 'days').format("YYYY-" + (tmpStartDate.format('M') - 1) + "-D");
                 this.simulateClick(nextDay);
             }
         };
-        /**
-         * @param {?} time
-         * @return {?}
-         */
-        DatepickerComponent.prototype.setStartTime = /**
-         * @param {?} time
-         * @return {?}
-         */
-        function (time) {
+        DatepickerComponent.prototype.setStartTime = function (time) {
             this.startTime = time;
         };
-        /**
-         * @param {?} time
-         * @return {?}
-         */
-        DatepickerComponent.prototype.setEndTime = /**
-         * @param {?} time
-         * @return {?}
-         */
-        function (time) {
+        DatepickerComponent.prototype.setEndTime = function (time) {
             this.endTime = time;
         };
         // tslint:disable-next-line:no-shadowed-variable
-        // tslint:disable-next-line:no-shadowed-variable
-        /**
-         * @param {?} time
-         * @param {?} moment
-         * @param {?} mode
-         * @return {?}
-         */
-        DatepickerComponent.prototype.handleTimeChange = 
-        // tslint:disable-next-line:no-shadowed-variable
-        /**
-         * @param {?} time
-         * @param {?} moment
-         * @param {?} mode
-         * @return {?}
-         */
-        function (time, moment, mode) {
+        DatepickerComponent.prototype.handleTimeChange = function (time, moment, mode) {
             this.reFormatInput();
             if (!time) {
                 return;
             }
             time = time.replace(/[^a-zA-Z0-9]/g, '');
             moment.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-            /** @type {?} */
             var lastTwo = time.substr(time.length - 2).toUpperCase();
-            /** @type {?} */
             var last = time.substr(time.length - 1).toUpperCase();
-            /** @type {?} */
             var hasLastTwo = ['AM', 'PM'].includes(lastTwo);
-            /** @type {?} */
             var hasLast = ['A', 'P'].includes(last);
-            /** @type {?} */
             var isAm = true;
-            /** @type {?} */
             var isPm = false;
             if (hasLast || hasLastTwo) {
                 isAm = last === 'A' || lastTwo === 'AM';
@@ -826,6 +544,8 @@
                     this.isInvalid = true;
                     break;
             }
+            console.log('--', this.isInvalid);
+            this.emitSelected.emit(this.selected);
             if (mode === 'start') {
                 this.startDate = moment;
                 this.startTimePicker.nativeElement.blur();
@@ -835,183 +555,99 @@
                 this.endTimePicker.nativeElement.blur();
             }
         };
-        DatepickerComponent.decorators = [
-            { type: core.Component, args: [{
-                        selector: 'funny-datepicker-single',
-                        template: "<!-- ********* INPUT FROM DATE Collaborator https://github.com/leifermendez ***************** --->\n\n<input (click)=\"openCalendar()\" readonly spellcheck=\"false\" class=\"omit-trigger-outside input-date-funny\"\n       autocomplete=\"nope\"\n       [ngClass]=\"{'bg-blue': mode === 'start' && includeEndDate, 'bg-red': isInvalid, 'funny-range':includeEndDate }\"\n       type=\"text\" [value]=\"inputValueOutput\">\n\n<!--- *************** CALENDAR ELEMENTS Author https://github.com/mokshithpyla ************* --->\n<div (clickOutside)=\"closeCalendar()\" class=\"calendar\" *ngIf=\"isOpen\">\n  <div class=\"calendar-nav\">\n    <div class=\"calendar-nav-previous-month\">\n      <button class=\"button is-text\" (click)=\"changeNavMonth(-1)\" [disabled]=\"!canAccessPrevious\">\n        <i class=\"fa fa-chevron-left\"></i>\n      </button>\n    </div>\n    <div>{{navDate.format('MMMM YYYY')}}</div>\n    <div class=\"calendar-nav-next-month\">\n      <button class=\"button is-text\" (click)=\"changeNavMonth(1)\" [disabled]=\"!canAccessNext\">\n        <i class=\"fa fa-chevron-right\"></i>\n      </button>\n    </div>\n  </div>\n  <div class=\"calendar-container\">\n    <div class=\"calendar-header\">\n      <div class=\"calendar-date\" *ngFor=\"let day of weekDaysHeaderArr\">\n        {{day}}\n      </div>\n    </div>\n    <div class=\"calendar-body\" *ngIf=\"includeEndDate; else notRange\">\n      <ng-container *ngIf=\"gridArr\">\n        <div *ngFor=\"let day of gridArr[currentYear][currentMonth]\"\n             class=\"calendar-date calendar-day-not-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}\"\n             [ngClass]=\"{\n          'is-disabled': !day.available,\n          'calendar-range': day.inRange,\n          'calendar-range-start': day.value === startDay?.value &&  day.month === startDay?.month && day.year === startDay?.year ,\n          'calendar-range-end': day.value === endDay?.value && day.month === endDay?.month && day.year === endDay?.year}\">\n          <button *ngIf=\"day.value !== 0\" class=\"date-item\"\n                  [ngClass]=\"{'is-active': day.isActive, 'is-today': day.isToday}\" (click)=\"selectDay(day)\">\n            {{day.value}}</button>\n          <button *ngIf=\"day.value === 0\" class=\"date-item\"></button>\n        </div>\n      </ng-container>\n    </div>\n    <ng-template #notRange>\n      <div class=\"calendar-body\">\n        <div *ngFor=\"let day of gridArr[currentYear][currentMonth]\"\n             class=\"calendar-date calendar-day-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}\"\n             [ngClass]=\"{'is-disabled': !day.available }\">\n          <button *ngIf=\"day.value !== 0\" class=\"date-item\"\n                  [ngClass]=\"{'is-active': day.isActive, 'is-today': day.isToday}\"\n                  (click)=\"selectDay(day)\">{{day.value}}</button>\n          <button *ngIf=\"day.value === 0\" class=\"date-item\"></button>\n        </div>\n      </div>\n    </ng-template>\n    <div class=\"footer-calendar\">\n      <div class=\"flex justify-content-between options-bar divider\">\n        <div class=\"flex\">\n          <div class=\"label-placeholder label-option pr-25\">\n            <input type=\"checkbox\" [(ngModel)]=\"includeEndDate\" (change)=\"handleModeChange()\">\n            <small>RANGO</small>\n          </div>\n          <div class=\"label-placeholder label-option pr-25\">\n            <input\n              (change)=\"reFormatInput();handleTimeChange(startTime, startDate, 'start');handleTimeChange(endTime, endDate, 'end')\"\n              [(ngModel)]=\"includeTime\" type=\"checkbox\">\n            <small>HORAS</small>\n          </div>\n        </div>\n        <div class=\"label-placeholder label-option pr-25\">\n          <div (click)=\"clear()\">Limpiar</div>\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\">\n        <div class=\"child\">\n          <div class=\"calendar-child-day\">{{startDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{startDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{startDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n          <input #startTimePicker type=\"text\" class=\"input-hour\" autocomplete=\"nope\" spellcheck=\"false\"\n                 [ngModel]=\"startDate.format('h:mm A')\" *ngIf=\"startDate && includeTime\"\n                 (ngModelChange)=\"setStartTime($event)\" (blur)=\"handleTimeChange(startTime, startDate, 'start')\"\n                 (keyup.enter)=\"handleTimeChange(startTime, startDate, 'start')\">\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\" *ngIf=\"includeEndDate\">\n        <div class=\"child\">\n          <div class=\"calendar-child-day\">{{endDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{endDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{endDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n          <ng-container *ngIf=\"endDate\">\n            <input #endTimePicker type=\"text\" class=\"input-hour\" autocomplete=\"nope\" spellcheck=\"false\"\n                   [ngModel]=\"endDate.format('h:mm A')\"\n                   (ngModelChange)=\"setEndTime($event)\" *ngIf=\"isRange && includeTime\"\n                   (blur)=\"handleTimeChange(endTime, endDate, 'end')\"\n                   (keyup.enter)=\"handleTimeChange(endTime, endDate, 'end')\">\n          </ng-container>\n        </div>\n      </div>\n      <!--      -->\n      <!--      <div class=\"divider\" *ngIf=\"hasTime\">-->\n      <!--        <div class=\"label-placeholder\">-->\n      <!--          <small>FROM</small>-->\n      <!--        </div>-->\n      <!--        <div class=\"justify-content-between flex pt-25\">-->\n      <!--          <div class=\" align-left\">-->\n      <!--            <div *ngIf=\"includeTime\" class=\" align-right\">-->\n      <!--              <div *ngIf=\"startDate\">-->\n      <!--                <input #startTimePicker type=\"text\" class=\"input-hour\" autocomplete=\"nope\" spellcheck=\"false\"-->\n      <!--                       [ngModel]=\"startDate.format('h:mm A')\"-->\n      <!--                       (ngModelChange)=\"setStartTime($event)\" (blur)=\"handleTimeChange(startTime, startDate, 'start')\"-->\n      <!--                       (keyup.enter)=\"handleTimeChange(startTime, startDate, 'start')\">-->\n      <!--              </div>-->\n      <!--              <div *ngIf=\"!startDate\" class=\" align-right\">-->\n      <!--                &#45;&#45;-->\n      <!--              </div>-->\n      <!--            </div>-->\n      <!--          </div>-->\n      <!--          <div class=\" align-right\">-->\n      <!--            <label class=\"switch\">-->\n      <!--              <input type=\"checkbox\" (change)=\"reFormatInput()\" [(ngModel)]=\"includeTime\">-->\n      <!--              <span class=\"slider round\"></span>-->\n      <!--            </label>-->\n      <!--          </div>-->\n      <!--        </div>-->\n      <!--      </div>-->\n\n      <!--      <div class=\"divider\" *ngIf=\"isRange\">-->\n      <!--        <div class=\"label-placeholder\">-->\n      <!--          <small>TO</small>-->\n      <!--        </div>-->\n      <!--        <div class=\" justify-content-between flex pt-25\">-->\n      <!--          <div class=\" align-left \">-->\n      <!--            <div *ngIf=\"includeTime\" class=\" align-right\">-->\n      <!--              <div *ngIf=\"endDate\">-->\n      <!--                <input #endTimePicker type=\"text\" class=\"input-hour\" autocomplete=\"nope\" spellcheck=\"false\"-->\n      <!--                       [ngModel]=\"endDate.format('h:mm A')\"-->\n      <!--                       (ngModelChange)=\"setEndTime($event)\"-->\n      <!--                       (blur)=\"handleTimeChange(endTime, endDate, 'end')\"-->\n      <!--                       (keyup.enter)=\"handleTimeChange(endTime, endDate, 'end')\">-->\n      <!--              </div>-->\n      <!--              <div *ngIf=\"!endDate\" class=\" align-right\">-->\n      <!--                &#45;&#45;-->\n      <!--              </div>-->\n      <!--            </div>-->\n      <!--          </div>-->\n      <!--          <div class=\" align-right\">-->\n      <!--            <label class=\"switch\">-->\n      <!--              <input type=\"checkbox\" [(ngModel)]=\"includeEndDate\" (change)=\"handleModeChange()\">-->\n      <!--              <span class=\"slider round\"></span>-->\n      <!--            </label>-->\n      <!--          </div>-->\n      <!--        </div>-->\n      <!--      </div>-->\n\n      <!--      <div class=\"divider\">-->\n      <!--        <button type=\"button\" class=\"datetimepicker-footer-clear has-text-danger button is-small is-text\"-->\n      <!--                (click)=\"clear()\">Clear All-->\n      <!--        </button>-->\n      <!--      </div>-->\n\n    </div>\n  </div>\n</div>\n",
-                        styles: [".datetimepicker-footer{display:flex;flex:1;justify-content:space-evenly;margin:0}.datetimepicker-selection-start{display:flex;align-items:center;border-radius:3px;background:rgba(242,241,238,.6);height:28px;line-height:1.2;padding-left:8px;padding-right:8px;flex-basis:50%;box-shadow:rgba(15,15,15,.1) 0 0 0 1px inset,rgba(15,15,15,.1) 0 1px 1px inset;flex-grow:1;font-size:14px}.bg-blue{background:rgba(46,170,220,.15)!important;box-shadow:#2eaadc 0 0 0 2px inset!important}.bg-red{background:rgba(235,87,87,.15)!important;box-shadow:#eb5757 0 0 0 2px inset}.switch{position:relative;display:inline-block;width:60px;height:34px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.4s}.slider:before{position:absolute;content:\"\";height:26px;width:26px;left:4px;bottom:4px;background-color:#fff;transition:.4s}input:checked+.slider{background-color:#00d1b2}input:focus+.slider{box-shadow:0 0 1px #00d1b2}input:checked+.slider:before{transform:translateX(26px)}.slider.round{border-radius:34px}.slider.round:before{border-radius:50%}.pb10{padding-bottom:10px}.flex{display:flex}.w33p{width:33.33%}.align-right{text-align:right}.w56p{width:56.33%}.align-left{text-align:left}.pl10{padding-left:10px}"]
-                    }] }
-        ];
-        /** @nocollapse */
-        DatepickerComponent.ctorParameters = function () { return []; };
-        DatepickerComponent.propDecorators = {
-            startTimePicker: [{ type: core.ViewChild, args: ['startTimePicker',] }],
-            endTimePicker: [{ type: core.ViewChild, args: ['endTimePicker',] }],
-            isRange: [{ type: core.Input }],
-            hasTime: [{ type: core.Input }],
-            startDate: [{ type: core.Input }],
-            endDate: [{ type: core.Input }],
-            minDate: [{ type: core.Input }],
-            maxDate: [{ type: core.Input }],
-            emitSelected: [{ type: core.Output }]
-        };
         return DatepickerComponent;
     }());
-    if (false) {
-        /** @type {?} */
-        DatepickerComponent.prototype.startTimePicker;
-        /** @type {?} */
-        DatepickerComponent.prototype.endTimePicker;
-        /** @type {?} */
-        DatepickerComponent.prototype.isRange;
-        /** @type {?} */
-        DatepickerComponent.prototype.hasTime;
-        /** @type {?} */
-        DatepickerComponent.prototype.startDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.endDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.minDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.maxDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.emitSelected;
-        /** @type {?} */
-        DatepickerComponent.prototype.inputValueOutput;
-        /** @type {?} */
-        DatepickerComponent.prototype.isOpen;
-        /** @type {?} */
-        DatepickerComponent.prototype.locale;
-        /** @type {?} */
-        DatepickerComponent.prototype.navDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.weekDaysHeaderArr;
-        /** @type {?} */
-        DatepickerComponent.prototype.gridArr;
-        /** @type {?} */
-        DatepickerComponent.prototype.selectedDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.canAccessPrevious;
-        /** @type {?} */
-        DatepickerComponent.prototype.canAccessNext;
-        /** @type {?} */
-        DatepickerComponent.prototype.todayDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.startDay;
-        /** @type {?} */
-        DatepickerComponent.prototype.endDay;
-        /** @type {?} */
-        DatepickerComponent.prototype.mode;
-        /** @type {?} */
-        DatepickerComponent.prototype.initialEmptyCells;
-        /** @type {?} */
-        DatepickerComponent.prototype.lastEmptyCells;
-        /** @type {?} */
-        DatepickerComponent.prototype.arrayLength;
-        /** @type {?} */
-        DatepickerComponent.prototype.currentMonth;
-        /** @type {?} */
-        DatepickerComponent.prototype.currentYear;
-        /** @type {?} */
-        DatepickerComponent.prototype.selected;
-        /** @type {?} */
-        DatepickerComponent.prototype.startTime;
-        /** @type {?} */
-        DatepickerComponent.prototype.endTime;
-        /** @type {?} */
-        DatepickerComponent.prototype.isInvalid;
-        /** @type {?} */
-        DatepickerComponent.prototype.includeEndDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.includeTime;
-        /** @type {?} */
-        DatepickerComponent.prototype.formatInputDate;
-        /** @type {?} */
-        DatepickerComponent.prototype.concatValueInput;
-        /** @type {?} */
-        DatepickerComponent.prototype.reFormatInput;
-        /** @type {?} */
-        DatepickerComponent.prototype.simulateClick;
-    }
+    DatepickerComponent.decorators = [
+        { type: i0.Component, args: [{
+                    selector: 'ngx-funny-datepicker',
+                    template: "<!-- ********* INPUT FROM DATE Collaborator https://github.com/leifermendez ***************** --->\n\n<input (click)=\"openCalendar()\" readonly spellcheck=\"false\" class=\"omit-trigger-outside input-date-funny {{classInput}}\"\n  autocomplete=\"nope\" [value]=\"value\" [disabled]=\"isDisabled\" (input)=\"onInput($event.target.value)\" [ngClass]=\"{\n    'date-picker-valid ng-valid': !isInvalid,\n     'date-picker-invalid ng-invalid': isInvalid,\n     'funny-range':includeEndDate,\n     'ng-opened': isOpen,\n     'ng-touched': onTouched,\n     'ng-untouched': !onTouched\n    }\" type=\"text\">\n\n<!--- *************** CALENDAR ELEMENTS Author https://github.com/mokshithpyla ************* --->\n<div (clickOutside)=\"closeCalendar()\" class=\"calendar\" *ngIf=\"isOpen\">\n  <form (keydown.enter)=\"$event.preventDefault()\"></form>\n  <div class=\"calendar-nav\">\n    <div class=\"calendar-nav-previous-month\">\n      <button type=\"button\" class=\"button is-text\" (click)=\"changeNavMonth(-1)\" [disabled]=\"!canAccessPrevious\">\n        <i class=\"fa fa-chevron-left\"></i>\n      </button>\n    </div>\n    <div>{{navDate.format('MMMM YYYY')}}</div>\n    <div class=\"calendar-nav-next-month\">\n      <button type=\"button\" class=\"button is-text\" (click)=\"changeNavMonth(1)\" [disabled]=\"!canAccessNext\">\n        <i class=\"fa fa-chevron-right\"></i>\n      </button>\n    </div>\n  </div>\n  <div class=\"calendar-container\">\n    <div class=\"calendar-header\">\n      <div class=\"calendar-date\" *ngFor=\"let day of weekDaysHeaderArr\">\n        {{day}}\n      </div>\n    </div>\n    <div class=\"calendar-body\" *ngIf=\"includeEndDate; else notRange\">\n      <ng-container *ngIf=\"gridArr\">\n        <div *ngFor=\"let day of gridArr[currentYear][currentMonth]\"\n          class=\"calendar-date calendar-day-not-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}\"\n          [ngClass]=\"{\n          'is-disabled': !day.available,\n          'calendar-range': day.inRange,\n          'calendar-range-start': day.value === startDay?.value &&  day.month === startDay?.month && day.year === startDay?.year ,\n          'calendar-range-end': day.value === endDay?.value && day.month === endDay?.month && day.year === endDay?.year}\">\n          <button type=\"button\" *ngIf=\"day.value !== 0\" class=\"date-item\"\n            [ngClass]=\"{'is-active': day.isActive, 'is-today': day.isToday}\" (click)=\"selectDay(day)\">\n            {{day.value}}</button>\n          <button type=\"button\" *ngIf=\"day.value === 0\" class=\"date-item\"></button>\n        </div>\n      </ng-container>\n    </div>\n    <ng-template #notRange>\n      <div class=\"calendar-body\">\n        <div *ngFor=\"let day of gridArr[currentYear][currentMonth]\"\n          class=\"calendar-date calendar-day-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}\"\n          [ngClass]=\"{'is-disabled': !day.available }\">\n          <button type=\"button\" *ngIf=\"day.value !== 0\" class=\"date-item\"\n            [ngClass]=\"{'is-active': day.isActive, 'is-today': day.isToday}\"\n            (click)=\"selectDay(day)\">{{day.value}}</button>\n          <button type=\"button\" *ngIf=\"day.value === 0\" class=\"date-item\"></button>\n        </div>\n      </div>\n    </ng-template>\n    <div class=\"footer-calendar\">\n      <div class=\"flex justify-content-between options-bar divider\">\n        <div class=\"flex\">\n          <div class=\"label-placeholder label-option pr-25\">\n            <input type=\"checkbox\" [(ngModel)]=\"includeEndDate\" (change)=\"handleModeChange()\">\n            <small>{{rangeLabel}}</small>\n          </div>\n          <div class=\"label-placeholder label-option pr-25\">\n            <input\n              (change)=\"reFormatInput();handleTimeChange(startTime, startDate, 'start');handleTimeChange(endTime, endDate, 'end')\"\n              [(ngModel)]=\"includeTime\" type=\"checkbox\">\n            <small>{{timeLabel}}</small>\n          </div>\n        </div>\n        <div class=\"label-placeholder label-option pr-25\">\n          <div (click)=\"clear()\">{{clearLabel}}</div>\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\">\n        <div class=\"child\">\n          <div class=\"calendar-child-day\">{{startDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{startDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{startDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n          <input #startTimePicker type=\"text\" class=\"input-hour\" autocomplete=\"nope\" spellcheck=\"false\"\n            [ngModel]=\"startDate.format('h:mm A')\" *ngIf=\"startDate && includeTime\"\n            (ngModelChange)=\"setStartTime($event)\" (blur)=\"handleTimeChange(startTime, startDate, 'start')\"\n            (keyup.enter)=\"handleTimeChange(startTime, startDate, 'start')\">\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\" *ngIf=\"includeEndDate\">\n        <div class=\"child\">\n          <div class=\"calendar-child-day\">{{endDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{endDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{endDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n\n          <ng-container *ngIf=\"endDate\">\n            <input #endTimePicker type=\"text\" class=\"input-hour\" autocomplete=\"nope\" spellcheck=\"false\"\n              [ngModel]=\"endDate.format('h:mm A')\" (ngModelChange)=\"setEndTime($event)\" *ngIf=\"includeTime\"\n              (blur)=\"handleTimeChange(endTime, endDate, 'end')\"\n              (keyup.enter)=\"handleTimeChange(endTime, endDate, 'end')\">\n          </ng-container>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n",
+                    providers: [
+                        {
+                            provide: forms.NG_VALUE_ACCESSOR,
+                            useExisting: i0.forwardRef(function () { return DatepickerComponent; }),
+                            multi: true
+                        }
+                    ],
+                    styles: [".datetimepicker-footer{display:flex;flex:1;justify-content:space-evenly;margin:0}.datetimepicker-selection-start{align-items:center;background:rgba(242,241,238,.6);border-radius:3px;box-shadow:inset 0 0 0 1px rgba(15,15,15,.1),inset 0 1px 1px rgba(15,15,15,.1);display:flex;flex-basis:50%;flex-grow:1;font-size:14px;height:28px;line-height:1.2;padding-left:8px;padding-right:8px}.slider{background-color:#ccc;bottom:0;cursor:pointer;left:0;right:0;top:0}.slider,.slider:before{position:absolute;transition:.4s}.slider:before{background-color:#fff;bottom:4px;content:\"\";height:26px;left:4px;width:26px}input:checked+.slider{background-color:#00d1b2}input:focus+.slider{box-shadow:0 0 1px #00d1b2}input:checked+.slider:before{transform:translateX(26px)}.slider.round{border-radius:34px}.slider.round:before{border-radius:50%}.pb10{padding-bottom:10px}.flex{display:flex}.w33p{width:33.33%}.align-right{text-align:right}.w56p{width:56.33%}.align-left{text-align:left}.pl10{padding-left:10px}.calendar-nav-next-month>button,.calendar-nav-previous-month>button{background-size:100%;height:25px}.calendar-nav>div{align-items:center;display:flex;height:25px}"]
+                },] }
+    ];
+    DatepickerComponent.ctorParameters = function () { return []; };
+    DatepickerComponent.propDecorators = {
+        value: [{ type: i0.Input }],
+        startTimePicker: [{ type: i0.ViewChild, args: ['startTimePicker',] }],
+        endTimePicker: [{ type: i0.ViewChild, args: ['endTimePicker',] }],
+        isRange: [{ type: i0.Input }],
+        hasTime: [{ type: i0.Input }],
+        startDate: [{ type: i0.Input }],
+        endDate: [{ type: i0.Input }],
+        minDate: [{ type: i0.Input }],
+        maxDate: [{ type: i0.Input }],
+        classInput: [{ type: i0.Input }],
+        locale: [{ type: i0.Input }],
+        rangeLabel: [{ type: i0.Input }],
+        timeLabel: [{ type: i0.Input }],
+        clearLabel: [{ type: i0.Input }],
+        emitSelected: [{ type: i0.Output }]
+    };
 
-    /**
-     * @fileoverview added by tsickle
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
     var OutSideDirective = /** @class */ (function () {
         function OutSideDirective(elementRef) {
             this.elementRef = elementRef;
-            this.clickOutside = new core.EventEmitter();
+            this.clickOutside = new i0.EventEmitter();
         }
-        /**
-         * @param {?} target
-         * @return {?}
-         */
-        OutSideDirective.prototype.onClick = /**
-         * @param {?} target
-         * @return {?}
-         */
-        function (target) {
-            /** @type {?} */
+        OutSideDirective.prototype.onClick = function (target) {
             var classElement = target.classList || [];
             if (!Array.from(classElement).includes('omit-trigger-outside')) {
-                /** @type {?} */
                 var clickedInside = this.elementRef.nativeElement.contains(target);
                 if (!clickedInside) {
                     this.clickOutside.emit();
                 }
             }
         };
-        OutSideDirective.decorators = [
-            { type: core.Directive, args: [{
-                        selector: '[clickOutside]'
-                    },] }
-        ];
-        /** @nocollapse */
-        OutSideDirective.ctorParameters = function () { return [
-            { type: core.ElementRef }
-        ]; };
-        OutSideDirective.propDecorators = {
-            clickOutside: [{ type: core.Output }],
-            onClick: [{ type: core.HostListener, args: ['document:click', ['$event.target'],] }]
-        };
         return OutSideDirective;
     }());
-    if (false) {
-        /** @type {?} */
-        OutSideDirective.prototype.clickOutside;
-        /**
-         * @type {?}
-         * @private
-         */
-        OutSideDirective.prototype.elementRef;
-    }
+    OutSideDirective.decorators = [
+        { type: i0.Directive, args: [{
+                    selector: '[clickOutside]'
+                },] }
+    ];
+    OutSideDirective.ctorParameters = function () { return [
+        { type: i0.ElementRef }
+    ]; };
+    OutSideDirective.propDecorators = {
+        clickOutside: [{ type: i0.Output }],
+        onClick: [{ type: i0.HostListener, args: ['document:click', ['$event.target'],] }]
+    };
 
-    /**
-     * @fileoverview added by tsickle
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
     var NgxFunnyDatepickerModule = /** @class */ (function () {
         function NgxFunnyDatepickerModule() {
         }
-        NgxFunnyDatepickerModule.decorators = [
-            { type: core.NgModule, args: [{
-                        declarations: [NgxFunnyDatepickerComponent, DatepickerComponent, OutSideDirective],
-                        imports: [
-                            common.CommonModule,
-                            forms.FormsModule
-                        ],
-                        exports: [NgxFunnyDatepickerComponent]
-                    },] }
-        ];
         return NgxFunnyDatepickerModule;
     }());
+    NgxFunnyDatepickerModule.decorators = [
+        { type: i0.NgModule, args: [{
+                    declarations: [NgxFunnyDatepickerComponent, DatepickerComponent, OutSideDirective],
+                    imports: [
+                        common.CommonModule,
+                        forms.FormsModule
+                    ],
+                    exports: [DatepickerComponent]
+                },] }
+    ];
 
+    /*
+     * Public API Surface of ngx-funny-datepicker
+     */
+
+    /**
+     * Generated bundle index. Do not edit.
+     */
+
+    exports.DatepickerComponent = DatepickerComponent;
     exports.NgxFunnyDatepickerComponent = NgxFunnyDatepickerComponent;
     exports.NgxFunnyDatepickerModule = NgxFunnyDatepickerModule;
     exports.NgxFunnyDatepickerService = NgxFunnyDatepickerService;
-    exports.ɵa = DatepickerComponent;
-    exports.ɵb = OutSideDirective;
+    exports.ɵa = OutSideDirective;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

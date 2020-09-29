@@ -1,27 +1,39 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment_ from 'moment';
 const moment = moment_;
 
 @Component({
-  selector: 'funny-datepicker-single',
+  selector: 'ngx-funny-datepicker',
   templateUrl: './datepicker.component.html',
-  styleUrls: ['./datepicker.component.css']
+  styleUrls: ['./datepicker.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DatepickerComponent),
+      multi: true
+    }
+  ]
 })
-export class DatepickerComponent implements OnInit {
+export class DatepickerComponent implements OnInit, ControlValueAccessor {
+  @Input() value: any = '';
   // @ts-ignore
   @ViewChild('startTimePicker') startTimePicker: ElementRef;
   // @ts-ignore
   @ViewChild('endTimePicker') endTimePicker: ElementRef;
   @Input() isRange: boolean;
   @Input() hasTime: boolean;
-  @Input() startDate: any = moment();
+  @Input() startDate: any;
   @Input() endDate: any;
   @Input() minDate: any;
   @Input() maxDate: any;
+  @Input() classInput: string;
+  @Input() locale = 'en';
+  @Input() rangeLabel = 'Range';
+  @Input() timeLabel = 'Time';
+  @Input() clearLabel = 'Clear';
   @Output() emitSelected = new EventEmitter<any>();
-  inputValueOutput: string;
   isOpen: boolean;
-  locale = 'en';
   navDate: any;
   weekDaysHeaderArr: Array<string> = [];
   gridArr: any = {};
@@ -44,6 +56,15 @@ export class DatepickerComponent implements OnInit {
   includeEndDate: boolean;
   includeTime: boolean;
   formatInputDate = 'D MMM, YYYY';
+  /**
+   * ControlAccessor
+   */
+  onTouched: boolean;
+  isDisabled: boolean;
+  onChange = (_: any) => { };
+  onTouch = () => {
+    this.onTouched = true
+  };
 
   constructor() {
   }
@@ -59,8 +80,43 @@ export class DatepickerComponent implements OnInit {
     this.currentMonth = this.navDate.month();
     this.currentYear = this.navDate.year();
     this.makeGrid(this.currentYear, this.currentMonth);
-    this.concatValueInput();
+    this.isInvalid = !(this.value.length)
+    // this.concatValueInput();
   }
+
+  /**
+   *
+   * controlValueAccessor
+   */
+  onInput(value) {
+    this.value = value;
+    this.onTouch();
+    this.onChange(this.value);
+  }
+
+  writeValue(value: any): void {
+    if (value) {
+      this.value = value || '';
+    } else {
+      this.value = '';
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouch = fn;
+  }
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  /**
+   *
+   * @param value
+   */
+
 
   setOptions() {
     this.includeEndDate = false;
@@ -73,9 +129,10 @@ export class DatepickerComponent implements OnInit {
       (this.endDate) ? '  -  ' : '',
       (this.endDate) ? this.endDate.format(this.formatInputDate) : ''
     ];
-    this.inputValueOutput = concatValue.join('');
+    this.value = concatValue.join('');
+    this.isInvalid = !(this.value.length);
 
-  };
+  }
 
   setAccess() {
     this.canAccessPrevious = this.canChangeNavMonth(-1);
@@ -167,7 +224,7 @@ export class DatepickerComponent implements OnInit {
   reFormatInput = () => {
     this.concatValueInput();
     this.formatInputDate = (this.includeTime) ? 'D MMM, YYYY h:mm A' : 'D MMM, YYYY';
-  };
+  }
 
   selectDay(day: any) {
     if (day.available) {
@@ -330,15 +387,19 @@ export class DatepickerComponent implements OnInit {
 
   openCalendar(): any {
     this.isOpen = true;
+    this.onTouch();
   }
 
   closeCalendar(): any {
     this.isOpen = false;
+    this.emitSelected.emit(this.selected);
   }
 
   changeMode(mode: string) {
     this.mode = mode;
+    this.onTouch()
   }
+
 
   clear() {
     this.resetRange();
@@ -353,6 +414,7 @@ export class DatepickerComponent implements OnInit {
     this.endTime = null;
     this.mode = 'start';
     this.makeGrid(this.currentYear, this.currentMonth);
+    this.reFormatInput();
   }
 
   setTime(moment, hour: number = 0, minute: number = 0) {
@@ -389,7 +451,7 @@ export class DatepickerComponent implements OnInit {
     } catch (e) {
       return null;
     }
-  };
+  }
 
   setStartTime(time) {
     this.startTime = time;
@@ -468,6 +530,8 @@ export class DatepickerComponent implements OnInit {
         this.isInvalid = true;
         break;
     }
+    console.log('--', this.isInvalid)
+    this.emitSelected.emit(this.selected);
     if (mode === 'start') {
       this.startDate = moment;
       this.startTimePicker.nativeElement.blur();

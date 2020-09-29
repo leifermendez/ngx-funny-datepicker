@@ -5,8 +5,13 @@ export declare class NgxFunnyDatepickerComponent implements OnInit {
     hasTime: boolean;
     startDate: any;
     endDate: any;
-    maxDate: any;
     minDate: any;
+    maxDate: any;
+    locale: string;
+    rangeLabel: string;
+    timeLabel: string;
+    clearLabel: string;
+    classInput: string;
     constructor();
     ngOnInit(): void;
     emitValue: (data: any) => void;

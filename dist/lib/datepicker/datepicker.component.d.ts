@@ -1,6 +1,8 @@
 import { OnInit, EventEmitter, ElementRef } from '@angular/core';
+import { ControlValueAccessor } from '@angular/forms';
 import * as moment_ from 'moment';
-export declare class DatepickerComponent implements OnInit {
+export declare class DatepickerComponent implements OnInit, ControlValueAccessor {
+    value: any;
     startTimePicker: ElementRef;
     endTimePicker: ElementRef;
     isRange: boolean;
@@ -9,10 +11,13 @@ export declare class DatepickerComponent implements OnInit {
     endDate: any;
     minDate: any;
     maxDate: any;
-    emitSelected: EventEmitter<any>;
-    inputValueOutput: string;
-    isOpen: boolean;
+    classInput: string;
     locale: string;
+    rangeLabel: string;
+    timeLabel: string;
+    clearLabel: string;
+    emitSelected: EventEmitter<any>;
+    isOpen: boolean;
     navDate: any;
     weekDaysHeaderArr: Array<string>;
     gridArr: any;
@@ -35,8 +40,28 @@ export declare class DatepickerComponent implements OnInit {
     includeEndDate: boolean;
     includeTime: boolean;
     formatInputDate: string;
+    /**
+     * ControlAccessor
+     */
+    onTouched: boolean;
+    isDisabled: boolean;
+    onChange: (_: any) => void;
+    onTouch: () => void;
     constructor();
     ngOnInit(): void;
+    /**
+     *
+     * controlValueAccessor
+     */
+    onInput(value: any): void;
+    writeValue(value: any): void;
+    registerOnChange(fn: any): void;
+    registerOnTouched(fn: any): void;
+    setDisabledState(isDisabled: boolean): void;
+    /**
+     *
+     * @param value
+     */
     setOptions(): void;
     concatValueInput: () => void;
     setAccess(): void;
