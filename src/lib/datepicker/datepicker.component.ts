@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import {Renderer2} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import * as moment_ from 'moment';
+
 const moment = moment_;
 
 @Component({
@@ -17,9 +19,7 @@ const moment = moment_;
 })
 export class DatepickerComponent implements OnInit, ControlValueAccessor {
   @Input() value: any = '';
-  // @ts-ignore
   @ViewChild('startTimePicker') startTimePicker: ElementRef;
-  // @ts-ignore
   @ViewChild('endTimePicker') endTimePicker: ElementRef;
   @Input() isRange: boolean;
   @Input() hasTime: boolean;
@@ -32,17 +32,19 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   @Input() rangeLabel = 'Range';
   @Input() timeLabel = 'Time';
   @Input() clearLabel = 'Clear';
+  @Input() includeEndDate: boolean;
   @Output() emitSelected = new EventEmitter<any>();
   isOpen: boolean;
   navDate: any;
   weekDaysHeaderArr: Array<string> = [];
-  gridArr: any = {};
+  dataMonths: any = {};
   selectedDate: any;
   canAccessPrevious = true;
   canAccessNext = true;
-  todayDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  todayDate = moment().set({hour: 0, minute: 0, second: 0, millisecond: 0});
   startDay: any;
   endDay: any;
+  renderedFlag = true;
   mode = 'end';
   initialEmptyCells: number;
   lastEmptyCells: number;
@@ -53,7 +55,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   startTime: any;
   endTime: any;
   isInvalid = false;
-  includeEndDate: boolean;
   includeTime: boolean;
   formatInputDate = 'D MMM, YYYY';
   /**
@@ -61,26 +62,50 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
    */
   onTouched: boolean;
   isDisabled: boolean;
-  onChange = (_: any) => { };
+  onChange = (_: any) => {
+  };
   onTouch = () => {
-    this.onTouched = true
+    this.onTouched = true;
   };
 
-  constructor() {
+  constructor(private renderer: Renderer2) {
+
+
   }
 
   ngOnInit() {
     this.setOptions();
-    moment.locale(this.locale);
-    if (!this.startDate) {
+    this.makeHeader();
+    /**
+     * Set startDate and parse
+     */
+
+    this.navDate = this.startDate;
+    if (this.startDate && moment(this.startDate).isValid()) {
+      this.startDate = moment(this.startDate);
+      this.navDate = this.startDate;
+    } else {
       this.startDate = moment();
     }
-    this.navDate = moment();
-    this.makeHeader();
+
+    /**
+     * Set endDate and parse
+     */
+
+    if (this.endDate && moment(this.endDate).isValid()) {
+      this.endDate = moment(this.endDate);
+      this.navDate = this.endDate;
+      this.includeEndDate = true;
+    } else {
+      this.endDate = null;
+    }
+    //
+    //
     this.currentMonth = this.navDate.month();
     this.currentYear = this.navDate.year();
-    this.makeGrid(this.currentYear, this.currentMonth);
-    this.isInvalid = !(this.value.length)
+    // // this.generateAllYear();
+    // this.makeGrid(this.currentYear, this.currentMonth);
+    // this.isInvalid = !(this.value.length);
     // this.concatValueInput();
   }
 
@@ -105,9 +130,11 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
+
   registerOnTouched(fn: any): void {
     this.onTouch = fn;
   }
+
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
   }
@@ -119,10 +146,15 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
 
   setOptions() {
-    this.includeEndDate = false;
-    this.includeTime = false;
+    moment.locale(this.locale);
+    this.generateAllGrid();
+    // this.includeEndDate = false;
+    // this.includeTime = false;
   }
 
+  /**
+   * Concat values date to string format for show in input
+   */
   concatValueInput = () => {
     const concatValue = [
       this.startDate.format(this.formatInputDate),
@@ -132,21 +164,33 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     this.value = concatValue.join('');
     this.isInvalid = !(this.value.length);
 
-  }
+  };
 
   setAccess() {
     this.canAccessPrevious = this.canChangeNavMonth(-1);
     this.canAccessNext = this.canChangeNavMonth(1);
   }
 
-  changeNavMonth(num: number) {
+  changeNavMonth(num: number, mode = 'next') {
     if (this.canChangeNavMonth(num)) {
-      this.navDate.add(num, 'month');
+      if (mode === 'next') {
+        this.navDate.add(num, 'month');
+      } else {
+        this.navDate = moment(`${this.navDate.year()}-${num}-${this.navDate.days()}`, 'YYYY-MM-DD');
+      }
       this.currentMonth = this.navDate.month();
       this.currentYear = this.navDate.year();
       this.makeGrid(this.currentYear, this.currentMonth);
     }
   }
+
+  generateAllGrid = () => {
+    const dateObjectCurrent = moment().startOf('year').clone();
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].forEach(a => {
+      this.makeGridCustom(dateObjectCurrent.year(), a);
+    });
+
+  };
 
   canChangeNavMonth(num: number) {
     const clonedDate = moment(this.navDate);
@@ -166,12 +210,84 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     this.arrayLength = this.initialEmptyCells + this.lastEmptyCells + date.daysInMonth();
   }
 
-  makeGrid(year, month) {
-    if (!this.gridArr.hasOwnProperty(year)) {
-      this.gridArr[year] = {};
+  makeGridCustom = (year = null, month = null) => {
+    /**
+     * Fix
+     */
+    console.log(`${year}-${month}-01`)
+
+    const dateOfTurn = moment(`${year}-${month}-01`, 'YYYY-M-DD');
+
+    /**
+     * Is OK
+     */
+    if (!this.dataMonths.hasOwnProperty(year)) {
+      this.dataMonths[year] = {};
     }
-    if (!this.gridArr[year].hasOwnProperty(month)) {
-      this.gridArr[year][month] = [];
+
+    /**
+     * Is OK
+     */
+    if (!this.dataMonths[year].hasOwnProperty(month)) {
+      this.dataMonths[year][month] = [];
+
+      /**
+       * Fix
+       */
+
+      const firstDayDate = moment(dateOfTurn).startOf('month');
+      const lastDayDate = moment(dateOfTurn).endOf('month');
+      this.dataMonths[year][`initialEmptyCells${month}`] = firstDayDate.weekday();
+      this.dataMonths[year][`lastEmptyCells${month}`] = 6 - lastDayDate.weekday();
+
+      const initEmptyCell = this.dataMonths[year][`initialEmptyCells${month}`];
+      const lastEmptyCell = this.dataMonths[year][`lastEmptyCells${month}`];
+
+      this.dataMonths[year][`arrayLength${month}`] = initEmptyCell + lastEmptyCell + dateOfTurn.daysInMonth();
+
+      const arrayLengths = this.dataMonths[year][`arrayLength${month}`];
+
+      this.getDimensions(dateOfTurn);
+      for (let i = 0; i < arrayLengths; i++) {
+        const obj: any = {};
+        if (i < initEmptyCell || i > initEmptyCell + dateOfTurn.daysInMonth() - 1) {
+          obj.value = 0;
+          obj.available = false;
+          obj.isToday = false;
+        } else {
+          obj.value = i - initEmptyCell + 1;
+          obj.available = this.isAvailable(i - initEmptyCell + 1);
+          obj.isToday = this.isToday(i - initEmptyCell + 1, month, year);
+          obj.month = month;
+          obj.date = dateOfTurn;
+          obj.year = year;
+          obj.isActive = false;
+          if (this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(this.startDate)) {
+            this.startDay = obj;
+          }
+          if (this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(this.endDate)) {
+            this.endDay = obj;
+          }
+          if (obj.isToday && !this.startDay && !this.endDay) {
+            this.startDay = obj;
+            this.endDay = obj;
+            obj.isActive = true;
+          }
+        }
+        obj.inRange = false;
+        this.dataMonths[year][month].push(obj);
+      }
+    }
+
+    console.log(this.dataMonths);
+  };
+
+  makeGrid(year = null, month = null) {
+    if (!this.dataMonths.hasOwnProperty(year)) {
+      this.dataMonths[year] = {};
+    }
+    if (!this.dataMonths[year].hasOwnProperty(month)) {
+      this.dataMonths[year][month] = [];
       this.getDimensions(this.navDate);
       for (let i = 0; i < this.arrayLength; i++) {
         const obj: any = {};
@@ -200,7 +316,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
           }
         }
         obj.inRange = false;
-        this.gridArr[year][month].push(obj);
+        this.dataMonths[year][month].push(obj);
       }
     }
     this.setAccess();
@@ -213,7 +329,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   isToday(num: number, month: number, year: number): boolean {
     const dateToCheck = moment(this.dateFromDayAndMonthAndYear(num, month, year));
-    return dateToCheck.isSame(moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
+    return dateToCheck.isSame(moment().set({hour: 0, minute: 0, second: 0, millisecond: 0}));
   }
 
   dateFromNum(num: number, referenceDate: any): any {
@@ -224,7 +340,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   reFormatInput = () => {
     this.concatValueInput();
     this.formatInputDate = (this.includeTime) ? 'D MMM, YYYY h:mm A' : 'D MMM, YYYY';
-  }
+  };
 
   selectDay(day: any) {
     if (day.available) {
@@ -282,17 +398,19 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   generateDate(day: any, date: any) {
+    console.log(day);
+
     let generatedDate = this.dateFromDayAndMonthAndYear(day.value, day.month, day.year);
     if (date) {
-      generatedDate = generatedDate.set({ hour: date.hour(), minute: date.minute() });
+      generatedDate = generatedDate.set({hour: date.hour(), minute: date.minute()});
     }
     return generatedDate;
   }
 
   resetRange() {
-    Object.keys(this.gridArr).forEach(year => {
-      Object.keys(this.gridArr[year]).forEach(month => {
-        this.gridArr[year][month].map(day => {
+    Object.keys(this.dataMonths).forEach(year => {
+      Object.keys(this.dataMonths[year]).forEach(month => {
+        this.dataMonths[year][month].map(day => {
           day.inRange = false;
           day.isActive = false;
         });
@@ -301,9 +419,9 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   resetActivity() {
-    Object.keys(this.gridArr).forEach(year => {
-      Object.keys(this.gridArr[year]).forEach(month => {
-        this.gridArr[year][month].map(day => {
+    Object.keys(this.dataMonths).forEach(year => {
+      Object.keys(this.dataMonths[year]).forEach(month => {
+        this.dataMonths[year][month].map(day => {
           day.isActive = false;
         });
       });
@@ -311,9 +429,9 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   dateFromDayAndMonthAndYear(day, month, year) {
-    let timeObject = { hour: 0, minute: 0, second: 0, millisecond: 0 };
+    let timeObject = {hour: 0, minute: 0, second: 0, millisecond: 0};
     if (this.includeTime) {
-      timeObject = { hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0 };
+      timeObject = {hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0};
       this.startDate.format('h:mm A');
     }
     return moment([year, month, day]).set(timeObject);
@@ -328,10 +446,10 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     const end = this.initialEmptyCells + this.endDay.value - 1;
     this.resetRange();
     if (this.startDay.month !== this.endDay.month || this.startDay.year !== this.endDay.year) {
-      Object.keys(this.gridArr).forEach(year => {
-        const calendar = this.gridArr[year];
+      Object.keys(this.dataMonths).forEach(year => {
+        const calendar = this.dataMonths[year];
         Object.keys(calendar).forEach(month => {
-          const days = this.gridArr[year][month];
+          const days = this.dataMonths[year][month];
           if (month == this.startDay.month && year == this.startDay.year) {
             for (let i = 0; i < start; i++) {
               days[i].inRange = false;
@@ -355,13 +473,13 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       const month = this.startDay.month;
       const year = this.startDay.year;
       for (let i = 0; i < start; i++) {
-        this.gridArr[year][month][i].inRange = false;
+        this.dataMonths[year][month][i].inRange = false;
       }
       for (let i = start; i <= end; i++) {
-        this.gridArr[year][month][i].inRange = true;
+        this.dataMonths[year][month][i].inRange = true;
       }
       for (let i = end + 1; i < this.arrayLength; i++) {
-        this.gridArr[year][month][i].inRange = false;
+        this.dataMonths[year][month][i].inRange = false;
       }
     }
   }
@@ -388,7 +506,22 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   openCalendar(): any {
     this.isOpen = true;
     this.onTouch();
+    // this.simulateClicks();
   }
+
+  // simulateClicks = () => {
+  //   if (this.startDate && !this.endDate) {
+  //     const tmpStartDate = this.startDate.clone();
+  //     const nextDay = tmpStartDate.format(`YYYY-${tmpStartDate.format('M') - 1}-D`);
+  //     this.simulateClick(nextDay, 'calendar-day-range');
+  //   }
+  //   if (this.startDate && this.endDate) {
+  //     const tmpEndDate = this.endDate.clone();
+  //     const nextDayEnd = tmpEndDate.format(`YYYY-${tmpEndDate.format('M') - 1}-D`);
+  //     this.simulateClick(nextDayEnd, 'calendar-day-not-range', true);
+  //     this.changeNavMonth(tmpEndDate.format('M'), 'fix');
+  //   }
+  // };
 
   closeCalendar(): any {
     this.isOpen = false;
@@ -397,7 +530,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   changeMode(mode: string) {
     this.mode = mode;
-    this.onTouch()
+    this.onTouch();
   }
 
 
@@ -418,7 +551,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   setTime(moment, hour: number = 0, minute: number = 0) {
-    return moment.set({ hour, minute, second: 0, millisecond: 0 });
+    return moment.set({hour, minute, second: 0, millisecond: 0});
   }
 
   handleModeChange() {
@@ -434,24 +567,45 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       this.endDay.isActive = false;
     } else {
       const tmpStartDate = this.startDate.clone();
-      const nextDay = tmpStartDate.add(2, 'days').format(`YYYY-${tmpStartDate.format('M') - 1}-D`);
-      this.simulateClick(nextDay);
+      // const nextDay = tmpStartDate.add(2, 'days').format(`YYYY-${tmpStartDate.format('M') - 1}-D`);
+      // this.simulateClick(nextDay, 'calendar-day-not-range');
     }
 
   }
 
-  simulateClick = (date: string) => {
+  simulateClick = (date: string, mode = 'calendar-day-range', infinity = false) => {
     try {
       setTimeout(() => {
-        const getDayNext = document.querySelector(`.calendar-day-not-range-${date} > button`) as any;
+        const getDayNext = document.querySelector(`.${mode}-${date} > button`) as any;
         if (getDayNext) {
           getDayNext.click();
         }
-      }, 50);
+        if (!getDayNext && infinity) {
+          const endDate = this.endDate.clone();
+          const obj = {
+            available: true,
+            inRange: true,
+            isActive: false,
+            date: this.navDate,
+            isToday: false,
+            month: parseInt(endDate.format('M')) - 1,
+            value: parseInt(endDate.format('D')),
+            year: parseInt(endDate.format('YYYY'))
+          };
+          // this.selectDay(obj);
+          const tmpGrid = this.dataMonths;
+          this.dataMonths = false;
+          this.dataMonths = tmpGrid;
+          const startDate = this.startDate.clone();
+          const nextDay = startDate.format(`YYYY-${startDate.format('M') - 1}-D`);
+          const getFixClick = document.querySelector(`.calendar-day-not-range-${nextDay} > button`) as any;
+          // getFixClick.click();
+        }
+      }, 1);
     } catch (e) {
       return null;
     }
-  }
+  };
 
   setStartTime(time) {
     this.startTime = time;
@@ -468,7 +622,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       return;
     }
     time = time.replace(/[^a-zA-Z0-9]/g, '');
-    moment.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+    moment.set({hour: 0, minute: 0, second: 0, millisecond: 0});
     let lastTwo = time.substr(time.length - 2).toUpperCase();
     let last = time.substr(time.length - 1).toUpperCase();
     const hasLastTwo = ['AM', 'PM'].includes(lastTwo);
@@ -488,7 +642,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       case 1:
         moment
           = isAm ? this.setTime(moment, Number(time)) :
-            this.setTime(moment, Number(time) + 12);
+          this.setTime(moment, Number(time) + 12);
         break;
       case 2:
         if (last >= 6) {
@@ -498,15 +652,15 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         if (time === 12) {
           moment
             = isAm ? this.setTime(moment, 0) :
-              this.setTime(moment, 12);
+            this.setTime(moment, 12);
         } else if (time < 12) {
           moment
             = isAm ? this.setTime(moment, Number(time)) :
-              this.setTime(moment, Number(time) + 12);
+            this.setTime(moment, Number(time) + 12);
         } else {
           moment
             = isAm ? this.setTime(moment, Number(time[0]), Number(last)) :
-              this.setTime(moment, Number(time[0]) + 12, Number(last));
+            this.setTime(moment, Number(time[0]) + 12, Number(last));
         }
         break;
       case 3:
@@ -516,7 +670,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         } else {
           moment
             = isAm ? this.setTime(moment, Number(time[0]), Number(lastTwo)) :
-              this.setTime(moment, Number(time[0]) + 12, Number(lastTwo));
+            this.setTime(moment, Number(time[0]) + 12, Number(lastTwo));
         }
         break;
       case 4:
@@ -530,7 +684,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         this.isInvalid = true;
         break;
     }
-    console.log('--', this.isInvalid)
+    console.log('--', this.isInvalid);
     this.emitSelected.emit(this.selected);
     if (mode === 'start') {
       this.startDate = moment;

@@ -12,7 +12,8 @@
 
 <!--- *************** CALENDAR ELEMENTS Author https://github.com/mokshithpyla ************* --->
 <div (clickOutside)="closeCalendar()" class="calendar" *ngIf="isOpen">
-  <form (keydown.enter)="$event.preventDefault()"></form>
+  <div (click)="applyRange()">daedeadead</div>
+  <!-- **** CALENDAR NAVIGATION ****-->
   <div class="calendar-nav">
     <div class="calendar-nav-previous-month">
       <button type="button" class="button is-text" (click)="changeNavMonth(-1)" [disabled]="!canAccessPrevious">
@@ -26,40 +27,24 @@
       </button>
     </div>
   </div>
+
+  <!--- **** CALENDAR CONTAINER ****-->
+
   <div class="calendar-container">
     <div class="calendar-header">
-      <div class="calendar-date" *ngFor="let day of weekDaysHeaderArr">
-        {{day}}
-      </div>
+      <div class="calendar-date" *ngFor="let day of weekDaysHeaderArr" [innerText]="day"></div>
     </div>
-    <div class="calendar-body" *ngIf="includeEndDate; else notRange">
-      <ng-container *ngIf="gridArr">
-        <div *ngFor="let day of gridArr[currentYear][currentMonth]"
-          class="calendar-date calendar-day-not-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}"
-          [ngClass]="{
-          'is-disabled': !day.available,
-          'calendar-range': day.inRange,
-          'calendar-range-start': day.value === startDay?.value &&  day.month === startDay?.month && day.year === startDay?.year ,
-          'calendar-range-end': day.value === endDay?.value && day.month === endDay?.month && day.year === endDay?.year}">
-          <button type="button" *ngIf="day.value !== 0" class="date-item"
-            [ngClass]="{'is-active': day.isActive, 'is-today': day.isToday}" (click)="selectDay(day)">
-            {{day.value}}</button>
-          <button type="button" *ngIf="day.value === 0" class="date-item"></button>
-        </div>
-      </ng-container>
+    <div class="calendar-body">
+      <ng-container *ngTemplateOutlet="templateCalendar;context:{
+      data:dataMonths,
+      year:navDate.format('YYYY'),
+      month:navDate.format('M'),
+      startDay:null,
+      endDate:null}"></ng-container>
+
     </div>
-    <ng-template #notRange>
-      <div class="calendar-body">
-        <div *ngFor="let day of gridArr[currentYear][currentMonth]"
-          class="calendar-date calendar-day-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}"
-          [ngClass]="{'is-disabled': !day.available }">
-          <button type="button" *ngIf="day.value !== 0" class="date-item"
-            [ngClass]="{'is-active': day.isActive, 'is-today': day.isToday}"
-            (click)="selectDay(day)">{{day.value}}</button>
-          <button type="button" *ngIf="day.value === 0" class="date-item"></button>
-        </div>
-      </div>
-    </ng-template>
+
+
     <div class="footer-calendar">
       <div class="flex justify-content-between options-bar divider">
         <div class="flex">
@@ -113,4 +98,35 @@
       </div>
     </div>
   </div>
+
 </div>
+
+<!--- ********** TEMPLATE BODY CALENDAR (NOT RANGE)*************** -->
+<ng-template #templateCalendar let-data="data" let-year="year" let-month="month" let-start="startDay" let-end="endDate">
+<!--  {{data | json}}-->
+  <div *ngFor="let day of data[year][month]"
+       class="calendar-date calendar-day-not-range-{{year}}-{{month}}-{{day?.value}}"
+       [ngClass]="{
+          'is-disabled': !day?.available,
+          'calendar-range': day?.inRange,
+          'calendar-range-start': day?.value === start?.value && day?.month === start?.month && day?.year === start?.year ,
+          'calendar-range-end': day?.value === end?.value && day?.month === end?.month && day?.year === end?.year}">
+    <button type="button" *ngIf="day.value !== 0" class="date-item"
+            [ngClass]="{'is-active': day?.isActive, 'is-today': day?.isToday}" (click)="selectDay(day)">
+      {{day.value}}</button>
+    <button type="button" *ngIf="day?.value === 0" class="date-item"></button>
+  </div>
+</ng-template>
+
+<!--<ng-template #notRange>-->
+<!--  <div class="calendar-body">-->
+<!--    <div *ngFor="let day of gridArr[currentYear][currentMonth]"-->
+<!--         class="calendar-date calendar-day-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}"-->
+<!--         [ngClass]="{'is-disabled': !day.available }">-->
+<!--      <button type="button" *ngIf="day.value !== 0" class="date-item"-->
+<!--              [ngClass]="{'is-active': day.isActive, 'is-today': day.isToday}"-->
+<!--              (click)="selectDay(day)">{{day.value}}</button>-->
+<!--      <button type="button" *ngIf="day.value === 0" class="date-item"></button>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</ng-template>-->
