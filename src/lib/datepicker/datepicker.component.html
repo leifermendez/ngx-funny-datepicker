@@ -1,7 +1,7 @@
 <!-- ********* INPUT FROM DATE Collaborator https://github.com/leifermendez ***************** --->
 
 <input (click)="openCalendar()" readonly spellcheck="false" class="omit-trigger-outside input-date-funny {{classInput}}"
-  autocomplete="nope" [value]="value" [disabled]="isDisabled" (input)="onInput($event.target.value)" [ngClass]="{
+       autocomplete="nope" [value]="value" [disabled]="isDisabled" (input)="onInput($event.target.value)" [ngClass]="{
     'date-picker-valid ng-valid': !isInvalid,
      'date-picker-invalid ng-invalid': isInvalid,
      'funny-range':includeEndDate,
@@ -12,7 +12,6 @@
 
 <!--- *************** CALENDAR ELEMENTS Author https://github.com/mokshithpyla ************* --->
 <div (clickOutside)="closeCalendar()" class="calendar" *ngIf="isOpen">
-  <div (click)="applyRange()">daedeadead</div>
   <!-- **** CALENDAR NAVIGATION ****-->
   <div class="calendar-nav">
     <div class="calendar-nav-previous-month">
@@ -35,12 +34,15 @@
       <div class="calendar-date" *ngFor="let day of weekDaysHeaderArr" [innerText]="day"></div>
     </div>
     <div class="calendar-body">
+      <!---**** LOAD TEMPLATE*** --->
       <ng-container *ngTemplateOutlet="templateCalendar;context:{
       data:dataMonths,
       year:navDate.format('YYYY'),
       month:navDate.format('M'),
+      includeEndDate:includeEndDate,
       startDay:null,
       endDate:null}"></ng-container>
+
 
     </div>
 
@@ -73,9 +75,9 @@
         </div>
         <div class="child">
           <input #startTimePicker type="text" class="input-hour" autocomplete="nope" spellcheck="false"
-            [ngModel]="startDate.format('h:mm A')" *ngIf="startDate && includeTime"
-            (ngModelChange)="setStartTime($event)" (blur)="handleTimeChange(startTime, startDate, 'start')"
-            (keyup.enter)="handleTimeChange(startTime, startDate, 'start')">
+                 [ngModel]="startDate.format('h:mm A')" *ngIf="startDate && includeTime"
+                 (ngModelChange)="setStartTime($event)" (blur)="handleTimeChange(startTime, startDate, 'start')"
+                 (keyup.enter)="handleTimeChange(startTime, startDate, 'start')">
         </div>
       </div>
       <div class="zone-preview-dates divider" *ngIf="includeEndDate">
@@ -90,9 +92,9 @@
 
           <ng-container *ngIf="endDate">
             <input #endTimePicker type="text" class="input-hour" autocomplete="nope" spellcheck="false"
-              [ngModel]="endDate.format('h:mm A')" (ngModelChange)="setEndTime($event)" *ngIf="includeTime"
-              (blur)="handleTimeChange(endTime, endDate, 'end')"
-              (keyup.enter)="handleTimeChange(endTime, endDate, 'end')">
+                   [ngModel]="endDate.format('h:mm A')" (ngModelChange)="setEndTime($event)" *ngIf="includeTime"
+                   (blur)="handleTimeChange(endTime, endDate, 'end')"
+                   (keyup.enter)="handleTimeChange(endTime, endDate, 'end')">
           </ng-container>
         </div>
       </div>
@@ -102,31 +104,32 @@
 </div>
 
 <!--- ********** TEMPLATE BODY CALENDAR (NOT RANGE)*************** -->
-<ng-template #templateCalendar let-data="data" let-year="year" let-month="month" let-start="startDay" let-end="endDate">
-<!--  {{data | json}}-->
-  <div *ngFor="let day of data[year][month]"
-       class="calendar-date calendar-day-not-range-{{year}}-{{month}}-{{day?.value}}"
-       [ngClass]="{
+<ng-template #templateCalendar let-data="data" let-year="year" let-includedend="includeEndDate" let-month="month"
+             let-start="startDay" let-end="endDate">
+  <ng-container *ngIf="includeEndDate">
+    <div *ngFor="let day of data[year][month]"
+         class="calendar-date calendar-day-not-range-{{year}}-{{month}}-{{day?.value}}"
+         [ngClass]="{
           'is-disabled': !day?.available,
           'calendar-range': day?.inRange,
           'calendar-range-start': day?.value === start?.value && day?.month === start?.month && day?.year === start?.year ,
           'calendar-range-end': day?.value === end?.value && day?.month === end?.month && day?.year === end?.year}">
-    <button type="button" *ngIf="day.value !== 0" class="date-item"
-            [ngClass]="{'is-active': day?.isActive, 'is-today': day?.isToday}" (click)="selectDay(day)">
-      {{day.value}}</button>
-    <button type="button" *ngIf="day?.value === 0" class="date-item"></button>
-  </div>
-</ng-template>
+      <button type="button" *ngIf="day.value !== 0" class="date-item"
+              [ngClass]="{'is-active': day?.isActive, 'is-today': day?.isToday}" (click)="selectDay(day)">
+        {{day.value}}</button>
+      <button type="button" *ngIf="day?.value === 0" class="date-item"></button>
+    </div>
+  </ng-container>
 
-<!--<ng-template #notRange>-->
-<!--  <div class="calendar-body">-->
-<!--    <div *ngFor="let day of gridArr[currentYear][currentMonth]"-->
-<!--         class="calendar-date calendar-day-range-{{currentYear}}-{{currentMonth}}-{{day?.value}}"-->
-<!--         [ngClass]="{'is-disabled': !day.available }">-->
-<!--      <button type="button" *ngIf="day.value !== 0" class="date-item"-->
-<!--              [ngClass]="{'is-active': day.isActive, 'is-today': day.isToday}"-->
-<!--              (click)="selectDay(day)">{{day.value}}</button>-->
-<!--      <button type="button" *ngIf="day.value === 0" class="date-item"></button>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</ng-template>-->
+  <ng-container *ngIf="!includeEndDate">
+    <div *ngFor = "let day of data[year][month]" class="calendar-date"
+         [ngClass]="{'is-disabled': !day?.available }">
+      <button
+        *ngIf = "day?.value !== 0"
+        class="date-item"
+        [ngClass]="{'is-active': day?.isActive, 'is-today': day?.isToday}"
+        (click) = "selectDay(day)">{{day?.value}}</button>
+      <button *ngIf = "day?.value === 0" class="date-item"></button>
+    </div>
+  </ng-container>
+</ng-template>

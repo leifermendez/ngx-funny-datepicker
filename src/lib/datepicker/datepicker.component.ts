@@ -80,10 +80,16 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
      * Set startDate and parse
      */
 
-    this.navDate = this.startDate;
+    this.navDate = moment();
     if (this.startDate && moment(this.startDate).isValid()) {
       this.startDate = moment(this.startDate);
       this.navDate = this.startDate;
+      const startDay = {
+        month: Number(this.startDate.format('M')),
+        year: this.startDate.year(),
+        day: Number(this.startDate.format('DD'))
+      };
+      this.dataMonths[startDay.year][startDay.month].forEach(d => d.isActive = (d.value === startDay.day));
     } else {
       this.startDate = moment();
     }
@@ -96,17 +102,39 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       this.endDate = moment(this.endDate);
       this.navDate = this.endDate;
       this.includeEndDate = true;
+      const endDay = {
+        month: Number(this.endDate.format('M')),
+        year: this.endDate.year(),
+        day: Number(this.endDate.format('DD'))
+      };
+
+      this.applyRange()
+      const startDay = {
+        month: Number(this.startDate.format('M')),
+        year: this.startDate.year(),
+        day: Number(this.startDate.format('DD'))
+      };
+      this.dataMonths[startDay.year][startDay.month].forEach(d => d.isActive = (d.value === startDay.day));
+      this.dataMonths[endDay.year][endDay.month].forEach(d => {
+        if (!d.isActive) {
+          d.isActive = (d.value === endDay.day);
+        }
+      });
     } else {
       this.endDate = null;
     }
-    //
-    //
+
     this.currentMonth = this.navDate.month();
     this.currentYear = this.navDate.year();
-    // // this.generateAllYear();
-    // this.makeGrid(this.currentYear, this.currentMonth);
-    // this.isInvalid = !(this.value.length);
-    // this.concatValueInput();
+    if (!this.maxDate) {
+      this.maxDate = this.navDate.clone().endOf('year').add(1, 'year');
+    }
+    if (!this.minDate) {
+      this.minDate = this.navDate.clone().startOf('year').subtract(1, 'year');
+    }
+    // this.applyRange()
+    this.concatValueInput();
+
   }
 
   /**
@@ -156,6 +184,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
    * Concat values date to string format for show in input
    */
   concatValueInput = () => {
+    console.log(this.endDate);
     const concatValue = [
       this.startDate.format(this.formatInputDate),
       (this.endDate) ? '  -  ' : '',
@@ -173,14 +202,10 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   changeNavMonth(num: number, mode = 'next') {
     if (this.canChangeNavMonth(num)) {
-      if (mode === 'next') {
-        this.navDate.add(num, 'month');
-      } else {
-        this.navDate = moment(`${this.navDate.year()}-${num}-${this.navDate.days()}`, 'YYYY-MM-DD');
-      }
-      this.currentMonth = this.navDate.month();
+      this.navDate.add(num, 'month');
+      this.currentMonth = this.navDate.month() + 1;
       this.currentYear = this.navDate.year();
-      this.makeGrid(this.currentYear, this.currentMonth);
+      this.makeGridCustom(this.currentYear, this.currentMonth);
     }
   }
 
@@ -214,7 +239,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     /**
      * Fix
      */
-    console.log(`${year}-${month}-01`)
+      // console.log(`${year}-${month}-01`);
 
     const dateOfTurn = moment(`${year}-${month}-01`, 'YYYY-M-DD');
 
@@ -279,7 +304,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       }
     }
 
-    console.log(this.dataMonths);
+    // console.log(this.dataMonths);
   };
 
   makeGrid(year = null, month = null) {
@@ -371,6 +396,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
             }
             break;
         }
+
         this.startDate = this.generateDate(this.startDay, this.startDate);
         this.endDate = this.generateDate(this.endDay, this.endDate);
         this.applyRange();
@@ -382,6 +408,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         };
       } else {
         this.resetActivity();
+
         this.startDate = this.selectedDate;
         this.startDay = day;
         this.startDay.isActive = true;
@@ -398,8 +425,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   generateDate(day: any, date: any) {
-    console.log(day);
-
     let generatedDate = this.dateFromDayAndMonthAndYear(day.value, day.month, day.year);
     if (date) {
       generatedDate = generatedDate.set({hour: date.hour(), minute: date.minute()});
@@ -410,10 +435,13 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   resetRange() {
     Object.keys(this.dataMonths).forEach(year => {
       Object.keys(this.dataMonths[year]).forEach(month => {
-        this.dataMonths[year][month].map(day => {
-          day.inRange = false;
-          day.isActive = false;
-        });
+        if (!isNaN(Number(month))) {
+          this.dataMonths[year][month].map(day => {
+            day.inRange = false;
+            day.isActive = false;
+          });
+        }
+
       });
     });
   }
@@ -421,9 +449,11 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   resetActivity() {
     Object.keys(this.dataMonths).forEach(year => {
       Object.keys(this.dataMonths[year]).forEach(month => {
-        this.dataMonths[year][month].map(day => {
-          day.isActive = false;
-        });
+        if (!isNaN(Number(month))) {
+          this.dataMonths[year][month].map(day => {
+            day.isActive = false;
+          });
+        }
       });
     });
   }
@@ -434,7 +464,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       timeObject = {hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0};
       this.startDate.format('h:mm A');
     }
-    return moment([year, month, day]).set(timeObject);
+    return moment(`${year}-${month}-${day}`, 'YYYY-M-DD').set(timeObject);
   }
 
   applyRange() {
@@ -449,23 +479,26 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       Object.keys(this.dataMonths).forEach(year => {
         const calendar = this.dataMonths[year];
         Object.keys(calendar).forEach(month => {
-          const days = this.dataMonths[year][month];
-          if (month == this.startDay.month && year == this.startDay.year) {
-            for (let i = 0; i < start; i++) {
-              days[i].inRange = false;
+          if (!isNaN(Number(month))) {
+            const days = this.dataMonths[year][month];
+            if (Number(month) === Number(this.startDay.month) && Number(year) === Number(this.startDay.year)) {
+              for (let i = 0; i < start; i++) {
+                days[i].inRange = false;
+              }
+              for (let i = start; i < startMonthLength; i++) {
+                days[i].inRange = true;
+              }
+            } else if (Number(month) === Number(this.endDay.month) && Number(year) === Number(this.endDay.year)) {
+              for (let i = 0; i <= end; i++) {
+                days[i].inRange = true;
+              }
+              for (let i = end + 1; i < endMonthLength; i++) {
+                days[i].inRange = false;
+              }
+            } else if ((month > this.startDay.month || year > this.startDay.year)
+              && (month < this.endDay.month || year < this.endDay.year)) {
+              days.forEach(day => day.inRange = true);
             }
-            for (let i = start; i < startMonthLength; i++) {
-              days[i].inRange = true;
-            }
-          } else if (month == this.endDay.month && year == this.endDay.year) {
-            for (let i = 0; i <= end; i++) {
-              days[i].inRange = true;
-            }
-            for (let i = end + 1; i < endMonthLength; i++) {
-              days[i].inRange = false;
-            }
-          } else if ((month > this.startDay.month || year > this.startDay.year) && (month < this.endDay.month || year < this.endDay.year)) {
-            days.forEach(day => day.inRange = true);
           }
         });
       });
