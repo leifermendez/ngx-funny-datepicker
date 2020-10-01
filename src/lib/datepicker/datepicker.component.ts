@@ -33,6 +33,9 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   @Input() timeLabel = 'Time';
   @Input() clearLabel = 'Clear';
   @Input() includeEndDate: boolean;
+  @Input() meridianTime: boolean;
+  @Input() formatInputDate = 'D MMM, YYYY';
+  @Input() formatInputTime = 'D MMM, YYYY HH:mm';
   @Output() emitSelected = new EventEmitter<any>();
   isOpen: boolean;
   navDate: any;
@@ -56,7 +59,18 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   endTime: any;
   isInvalid = false;
   includeTime: boolean;
-  formatInputDate = 'D MMM, YYYY';
+  minInputHour = 0;
+  maxInputHour = 23;
+  valueInputHour: any = {
+    start: {},
+    end: {}
+  };
+  minInputMinute = 0;
+  maxInputMinute = 59;
+  valueInputMinute: any = {
+    start: {},
+    end: {}
+  };
   /**
    * ControlAccessor
    */
@@ -81,9 +95,17 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
      */
 
     this.navDate = moment();
+    this.valueInputHour.start = this.navDate.format('hh');
+    this.valueInputMinute.start = this.navDate.format('mm');
+
+    this.valueInputMinute.end = this.navDate.format('mm');
+    this.valueInputHour.end = this.navDate.format('hh');
+
     if (this.startDate && moment(this.startDate).isValid()) {
       this.startDate = moment(this.startDate);
       this.navDate = this.startDate;
+      this.valueInputHour.start = this.startDate.format('hh');
+      this.valueInputMinute.start = this.startDate.format('mm');
       const startDay = {
         month: Number(this.startDate.format('M')),
         year: this.startDate.year(),
@@ -101,6 +123,8 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     if (this.endDate && moment(this.endDate).isValid()) {
       this.endDate = moment(this.endDate);
       this.navDate = this.endDate;
+      this.valueInputMinute.end = this.endDate.format('mm');
+      this.valueInputHour.end = this.endDate.format('hh');
       this.includeEndDate = true;
       const endDay = {
         month: Number(this.endDate.format('M')),
@@ -108,7 +132,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         day: Number(this.endDate.format('DD'))
       };
 
-      this.applyRange()
+      this.applyRange();
       const startDay = {
         month: Number(this.startDate.format('M')),
         year: this.startDate.year(),
@@ -169,13 +193,110 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   /**
    *
-   * @param value
+   * @param num
+   * @param mode
    */
+  addOrSubHour = (num: number, mode: string) => {
+    if (num > 0) {
+      this.checkHourValidate((Number(this.valueInputHour[mode]) + 1), mode);
+    } else {
+      this.checkHourValidate((Number(this.valueInputHour[mode]) - 1), mode);
+    }
+  };
 
+  addOrSubMinute = (num: number, mode: string) => {
+    if (num > 0) {
+      this.checkMinuteValidate((Number(this.valueInputMinute[mode]) + 1), mode);
+    } else {
+      this.checkMinuteValidate((Number(this.valueInputMinute[mode]) - 1), mode);
+    }
+  };
+
+  checkHourValidate = ($event, mode) => {
+    const toHour = (mode === 'start') ? 'start' : 'end';
+    if (this.meridianTime) {
+      if ($event <= 12 && $event > 0) {
+        this.valueInputHour[toHour] = $event;
+        if (mode === 'start' && this.startDate && this.startDate.format('A') === 'PM') {
+          if ($event === 12) {
+            this.startDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+          } else {
+            this.startDate.set({hour: ($event + 12), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+          }
+        }
+        if (mode === 'start' && this.startDate && this.startDate.format('A') === 'AM') {
+          this.startDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+        }
+
+        if (mode === 'end' && this.endDate && this.endDate.format('A') === 'PM') {
+          if ($event === 12) {
+            this.endDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+          } else {
+            this.endDate.set({hour: ($event + 12), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+          }
+        }
+        if (mode === 'end' && this.endDate && this.endDate.format('A') === 'AM') {
+          this.endDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+        }
+        if (mode === 'start' && this.endDate && this.endDate.format('A') === 'PM') {
+          this.startDate.set({hour: this.valueInputHour[toHour] + 12, minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+        }
+      }
+    }
+    // if ($event < 0) {
+    //   this.valueInputHour[toHour] = 23;
+    // } else if ($event > 23) {
+    //   this.valueInputHour[toHour] = 0;
+    // }
+
+    //
+
+    // if (mode === 'end') {
+    //   this.endDate.set({hour: this.valueInputHour[toHour], minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+    // }
+
+    this.reFormatInput();
+  };
+
+  checkMinuteValidate = ($event, mode: string) => {
+    const toHour = (mode === 'start') ? 'start' : 'end';
+    this.valueInputMinute[toHour] = $event;
+    if ($event < 0) {
+      this.valueInputMinute[toHour] = 59;
+    } else if ($event > 59) {
+      this.valueInputMinute[toHour] = 0;
+    }
+    if (mode === 'start') {
+      this.startDate.set({minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+    }
+    if (mode === 'end') {
+      this.endDate.set({minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+    }
+    this.reFormatInput();
+  };
+
+  changeMeridianTime = (newMeridian, mode) => {
+    const isStartOrEnd = (mode === 'start') ? 'startDate' : 'endDate';
+    if (newMeridian === 'AM' && this[isStartOrEnd].hours() > 12) {
+      this[isStartOrEnd].hours(this[isStartOrEnd].hours() - 12);
+    } else if (newMeridian === 'PM' && this[isStartOrEnd].hours() <= 12) {
+      this[isStartOrEnd].hours(this[isStartOrEnd].hours() + 12);
+    } else if (newMeridian === 'AM' && this.startDate.hours() <= 12) {
+      this[isStartOrEnd].hours(this[isStartOrEnd].hours() - 1);
+    }
+    if (mode === 'start') {
+      this.valueInputHour[mode] = this[isStartOrEnd].hours(this[isStartOrEnd].hours()).format('hh');
+    }
+    if (mode === 'end') {
+      this.valueInputHour[mode] = this[isStartOrEnd].hours(this[isStartOrEnd].hours()).format('hh');
+    }
+    this.reFormatInput();
+  };
 
   setOptions() {
     moment.locale(this.locale);
     this.generateAllGrid();
+    this.formatInputTime = (this.meridianTime) ? `D MMM, YYYY hh:mm A` : `D MMM, YYYY HH:mm`;
     // this.includeEndDate = false;
     // this.includeTime = false;
   }
@@ -184,7 +305,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
    * Concat values date to string format for show in input
    */
   concatValueInput = () => {
-    console.log(this.endDate);
     const concatValue = [
       this.startDate.format(this.formatInputDate),
       (this.endDate) ? '  -  ' : '',
@@ -239,7 +359,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     /**
      * Fix
      */
-      // console.log(`${year}-${month}-01`);
 
     const dateOfTurn = moment(`${year}-${month}-01`, 'YYYY-M-DD');
 
@@ -303,49 +422,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         this.dataMonths[year][month].push(obj);
       }
     }
-
-    // console.log(this.dataMonths);
   };
-
-  makeGrid(year = null, month = null) {
-    if (!this.dataMonths.hasOwnProperty(year)) {
-      this.dataMonths[year] = {};
-    }
-    if (!this.dataMonths[year].hasOwnProperty(month)) {
-      this.dataMonths[year][month] = [];
-      this.getDimensions(this.navDate);
-      for (let i = 0; i < this.arrayLength; i++) {
-        const obj: any = {};
-        if (i < this.initialEmptyCells || i > this.initialEmptyCells + this.navDate.daysInMonth() - 1) {
-          obj.value = 0;
-          obj.available = false;
-          obj.isToday = false;
-        } else {
-          obj.value = i - this.initialEmptyCells + 1;
-          obj.available = this.isAvailable(i - this.initialEmptyCells + 1);
-          obj.isToday = this.isToday(i - this.initialEmptyCells + 1, month, year);
-          obj.month = month;
-          obj.date = this.navDate;
-          obj.year = year;
-          obj.isActive = false;
-          if (this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(this.startDate)) {
-            this.startDay = obj;
-          }
-          if (this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(this.endDate)) {
-            this.endDay = obj;
-          }
-          if (obj.isToday && !this.startDay && !this.endDay) {
-            this.startDay = obj;
-            this.endDay = obj;
-            obj.isActive = true;
-          }
-        }
-        obj.inRange = false;
-        this.dataMonths[year][month].push(obj);
-      }
-    }
-    this.setAccess();
-  }
 
   isAvailable(num: number): boolean {
     const dateToCheck = this.dateFromNum(num, this.navDate);
@@ -363,8 +440,8 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   reFormatInput = () => {
+    this.formatInputDate = (this.includeTime) ? this.formatInputTime : this.formatInputDate;
     this.concatValueInput();
-    this.formatInputDate = (this.includeTime) ? 'D MMM, YYYY h:mm A' : 'D MMM, YYYY';
   };
 
   selectDay(day: any) {
@@ -403,8 +480,8 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         this.startDay.isActive = true;
         this.endDay.isActive = true;
         this.selected = {
-          startDate: this.startDate,
-          endDate: this.endDate
+          startDate: this.startDate.toDate(),
+          endDate: this.endDate.toDate()
         };
       } else {
         this.resetActivity();
@@ -413,7 +490,8 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         this.startDay = day;
         this.startDay.isActive = true;
         this.selected = {
-          startDate: this.startDate
+          startDate: this.startDate.toDate(),
+          endDate: null
         };
         this.emitSelected.emit(this.selected);
       }
@@ -539,22 +617,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   openCalendar(): any {
     this.isOpen = true;
     this.onTouch();
-    // this.simulateClicks();
   }
-
-  // simulateClicks = () => {
-  //   if (this.startDate && !this.endDate) {
-  //     const tmpStartDate = this.startDate.clone();
-  //     const nextDay = tmpStartDate.format(`YYYY-${tmpStartDate.format('M') - 1}-D`);
-  //     this.simulateClick(nextDay, 'calendar-day-range');
-  //   }
-  //   if (this.startDate && this.endDate) {
-  //     const tmpEndDate = this.endDate.clone();
-  //     const nextDayEnd = tmpEndDate.format(`YYYY-${tmpEndDate.format('M') - 1}-D`);
-  //     this.simulateClick(nextDayEnd, 'calendar-day-not-range', true);
-  //     this.changeNavMonth(tmpEndDate.format('M'), 'fix');
-  //   }
-  // };
 
   closeCalendar(): any {
     this.isOpen = false;
@@ -565,7 +628,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     this.mode = mode;
     this.onTouch();
   }
-
 
   clear() {
     this.resetRange();
@@ -579,7 +641,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     this.startTime = null;
     this.endTime = null;
     this.mode = 'start';
-    this.makeGrid(this.currentYear, this.currentMonth);
+    this.makeGridCustom(this.currentYear, this.currentMonth);
     this.reFormatInput();
   }
 
@@ -606,40 +668,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   }
 
-  simulateClick = (date: string, mode = 'calendar-day-range', infinity = false) => {
-    try {
-      setTimeout(() => {
-        const getDayNext = document.querySelector(`.${mode}-${date} > button`) as any;
-        if (getDayNext) {
-          getDayNext.click();
-        }
-        if (!getDayNext && infinity) {
-          const endDate = this.endDate.clone();
-          const obj = {
-            available: true,
-            inRange: true,
-            isActive: false,
-            date: this.navDate,
-            isToday: false,
-            month: parseInt(endDate.format('M')) - 1,
-            value: parseInt(endDate.format('D')),
-            year: parseInt(endDate.format('YYYY'))
-          };
-          // this.selectDay(obj);
-          const tmpGrid = this.dataMonths;
-          this.dataMonths = false;
-          this.dataMonths = tmpGrid;
-          const startDate = this.startDate.clone();
-          const nextDay = startDate.format(`YYYY-${startDate.format('M') - 1}-D`);
-          const getFixClick = document.querySelector(`.calendar-day-not-range-${nextDay} > button`) as any;
-          // getFixClick.click();
-        }
-      }, 1);
-    } catch (e) {
-      return null;
-    }
-  };
-
   setStartTime(time) {
     this.startTime = time;
   }
@@ -648,7 +676,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     this.endTime = time;
   }
 
-  // tslint:disable-next-line:no-shadowed-variable
   handleTimeChange(time: any, moment: any, mode: string) {
     this.reFormatInput();
     if (!time) {
@@ -717,7 +744,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         this.isInvalid = true;
         break;
     }
-    console.log('--', this.isInvalid);
     this.emitSelected.emit(this.selected);
     if (mode === 'start') {
       this.startDate = moment;
