@@ -1,7 +1,6 @@
 <!-- ********* INPUT FROM DATE Collaborator https://github.com/leifermendez ***************** --->
-
 <input (click)="openCalendar()" readonly spellcheck="false" class="omit-trigger-outside input-date-funny {{classInput}}"
-       autocomplete="nope" [value]="value" [disabled]="isDisabled" (input)="onInput($event.target.value)" [ngClass]="{
+  autocomplete="nope" [value]="value" [disabled]="isDisabled" (input)="onInput($event.target.value)" [ngClass]="{
     'date-picker-valid ng-valid': !isInvalid,
      'date-picker-invalid ng-invalid': isInvalid,
      'funny-range':includeEndDate,
@@ -42,10 +41,7 @@
       includeEndDate:includeEndDate,
       startDay:null,
       endDate:null}"></ng-container>
-
-
     </div>
-
 
     <div class="footer-calendar">
       <div class="flex justify-content-between options-bar divider">
@@ -75,7 +71,8 @@
         </div>
         <div class="child">
           <ng-container
-            *ngTemplateOutlet="templateTimeInput;context:{mode:'start',startDate:startDate,timeShow:includeTime}"></ng-container>
+            *ngTemplateOutlet="templateTimeInput;context:{mode:'start',startDate:startDate,timeShow:includeTime}">
+          </ng-container>
         </div>
       </div>
       <div class="zone-preview-dates divider" *ngIf="includeEndDate">
@@ -87,8 +84,8 @@
           </div>
         </div>
         <div class="child">
-          <ng-container
-            *ngTemplateOutlet="templateTimeInput;context:{mode:'end',endDate:endDate,timeShow:includeTime}"></ng-container>
+          <ng-container *ngTemplateOutlet="templateTimeInput;context:{mode:'end',endDate:endDate,timeShow:includeTime}">
+          </ng-container>
         </div>
       </div>
     </div>
@@ -98,31 +95,27 @@
 
 <!--- ********** TEMPLATE BODY CALENDAR*************** -->
 <ng-template #templateCalendar let-data="data" let-year="year" let-includedend="includeEndDate" let-month="month"
-             let-start="startDay" let-end="endDate">
+  let-start="startDay" let-end="endDate">
   <ng-container *ngIf="includeEndDate">
     <div *ngFor="let day of data[year][month]"
-         class="calendar-date calendar-day-not-range-{{year}}-{{month}}-{{day?.value}}"
-         [ngClass]="{
+      class="calendar-date calendar-day-not-range-{{year}}-{{month}}-{{day?.value}}" [ngClass]="{
           'is-disabled': !day?.available,
           'calendar-range': day?.inRange,
           'calendar-range-start': day?.value === start?.value && day?.month === start?.month && day?.year === start?.year ,
           'calendar-range-end': day?.value === end?.value && day?.month === end?.month && day?.year === end?.year}">
       <button type="button" *ngIf="day.value !== 0" class="date-item"
-              [ngClass]="{'is-active': day?.isActive, 'is-today': day?.isToday}" (click)="selectDay(day)">
+        [ngClass]="{'is-active': day?.isActive, 'is-today': day?.isToday}" (click)="selectDay(day)">
         {{day.value}}</button>
       <button type="button" *ngIf="day?.value === 0" class="date-item"></button>
     </div>
   </ng-container>
 
   <ng-container *ngIf="!includeEndDate">
-    <div *ngFor="let day of data[year][month]" class="calendar-date"
-         [ngClass]="{'is-disabled': !day?.available }">
-      <button
-        *ngIf="day?.value !== 0"
-        class="date-item"
+    <div *ngFor="let day of data[year][month]" class="calendar-date" [ngClass]="{'is-disabled': !day?.available }">
+      <button *ngIf="day?.value !== 0" class="date-item" type="button"
         [ngClass]="{'is-active': day?.isActive, 'is-today': day?.isToday}"
         (click)="selectDay(day)">{{day?.value}}</button>
-      <button *ngIf="day?.value === 0" class="date-item"></button>
+      <button type="button" *ngIf="day?.value === 0" class="date-item"></button>
     </div>
   </ng-container>
 </ng-template>
@@ -132,69 +125,61 @@
   <ng-container *ngIf="show">
     <div class="meridian-buttons" *ngIf="meridianTime && mode === 'start'">
       <div>
-        <button (click)="changeMeridianTime('AM','start')"
-                [disabled]="startDate && startDate.format('A') === 'AM'"
-                type="button">AM
+        <button (click)="changeMeridianTime('AM','start')" [disabled]="startDate && startDate.format('A') === 'AM'"
+          type="button">AM
         </button>
       </div>
       <div>
-        <button (click)="changeMeridianTime('PM','start')"
-                [disabled]="startDate && startDate.format('A') === 'PM'"
-                type="button">PM
+        <button (click)="changeMeridianTime('PM','start')" [disabled]="startDate && startDate.format('A') === 'PM'"
+          type="button">PM
         </button>
       </div>
     </div>
-    <div class="meridian-buttons" *ngIf="meridianTime && mode === 'end'">
+    <div class="meridian-buttons" *ngIf="meridianTime && endDate && mode === 'end'">
       <div>
-        <button (click)="changeMeridianTime('AM','end')"
-                [disabled]="endDate && endDate.format('A') === 'AM'"
-                type="button">AM
+        <button (click)="changeMeridianTime('AM','end')" [disabled]="endDate && endDate.format('A') === 'AM'"
+          type="button">AM
         </button>
       </div>
       <div>
-        <button (click)="changeMeridianTime('PM','end')"
-                [disabled]="endDate && endDate.format('A') === 'PM'"
-                type="button">PM
+        <button (click)="changeMeridianTime('PM','end')" [disabled]="endDate && endDate.format('A') === 'PM'"
+          type="button">PM
         </button>
       </div>
     </div>
     <div class="calendar-time-input-cells" *ngIf="mode === 'start'">
       <div class="group-input-item">
-        <input [maxLength]="2" [minLength]="2" [max]="maxInputHour" [min]="minInputHour"
-               [(ngModel)]="valueInputHour.start"
-               type="number">
+        <input [maxLength]="2" libCheckInput [minLength]="2" (ngModelChange)="checkHourValidate($event,'start')"
+          [max]="maxInputHour" [min]="minInputHour" [(ngModel)]="valueInputHour.start" type="number">
         <div>
-          <button (click)="addOrSubHour(1,'start')" class="up-time"></button>
-          <button (click)="addOrSubHour(-1,'start')" class="down-time"></button>
+          <button (click)="addOrSubHour(1,'start')" type="button" class="up-time"></button>
+          <button (click)="addOrSubHour(-1,'start')" type="button" class="down-time"></button>
         </div>
       </div>
       <div class="group-input-item">
-        <input [maxLength]="2" [minLength]="2" [max]="maxInputMinute" [min]="minInputMinute"
-               [(ngModel)]="valueInputMinute.start"
-               type="number">
+        <input [maxLength]="2" libCheckInput [minLength]="2" (ngModelChange)="checkMinuteValidate($event,'start')"
+          [max]="maxInputMinute" [min]="minInputMinute" [(ngModel)]="valueInputMinute.start" type="number">
         <div>
-          <button (click)="addOrSubMinute(1,'start')" class="up-time"></button>
-          <button (click)="addOrSubMinute(-1,'start')" class="down-time"></button>
+          <button (click)="addOrSubMinute(1,'start')" type="button" class="up-time"></button>
+          <button (click)="addOrSubMinute(-1,'start')" type="button" class="down-time"></button>
         </div>
       </div>
     </div>
-    <div class="calendar-time-input-cells" *ngIf="mode === 'end'">
+    <div class="calendar-time-input-cells" *ngIf="endDate && mode === 'end'">
       <div class="group-input-item">
-        <input [maxLength]="2" [minLength]="2" [max]="maxInputHour" [min]="minInputHour"
-               [(ngModel)]="valueInputHour.end"
-               type="number">
+        <input [maxLength]="2" libCheckInput [minLength]="2" (ngModelChange)="checkHourValidate($event,'end')"
+          type="button" [max]="maxInputHour" [min]="minInputHour" [(ngModel)]="valueInputHour.end" type="number">
         <div>
-          <button (click)="addOrSubHour(1,'end')" class="up-time"></button>
-          <button (click)="addOrSubHour(-1,'end')" class="down-time"></button>
+          <button (click)="addOrSubHour(1,'end')" type="button" class="up-time"></button>
+          <button (click)="addOrSubHour(-1,'end')" type="button" class="down-time"></button>
         </div>
       </div>
       <div class="group-input-item">
-        <input [maxLength]="2" [minLength]="2" [max]="maxInputMinute" [min]="minInputMinute"
-               [(ngModel)]="valueInputMinute.end"
-               type="number">
+        <input [maxLength]="2" libCheckInput [minLength]="2" (ngModelChange)="checkMinuteValidate($event,'end')"
+          [max]="maxInputMinute" [min]="minInputMinute" [(ngModel)]="valueInputMinute.end" type="number">
         <div>
-          <button (click)="addOrSubMinute(1,'end')" class="up-time"></button>
-          <button (click)="addOrSubMinute(-1,'end')" class="down-time"></button>
+          <button (click)="addOrSubMinute(1,'end')" type="button" class="up-time"></button>
+          <button (click)="addOrSubMinute(-1,'end')" type="button" class="down-time"></button>
         </div>
       </div>
     </div>

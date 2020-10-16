@@ -1,4 +1,4 @@
-.datetimepicker-footer {
+:host .datetimepicker-footer {
   display: flex;
   -webkit-box-flex: 1;
   flex: 1;
@@ -7,7 +7,7 @@
   margin: 0;
 }
 
-.datetimepicker-selection-start {
+:host .datetimepicker-selection-start {
   display: flex;
   align-items: center;
   border-radius: 3px;
@@ -22,8 +22,7 @@
   font-size: 14px;
 }
 
-
-.slider {
+:host .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -35,7 +34,7 @@
   transition: .4s;
 }
 
-.slider:before {
+:host .slider:before {
   position: absolute;
   content: "";
   height: 26px;
@@ -47,94 +46,94 @@
   transition: .4s;
 }
 
-input:checked + .slider {
+:host input:checked + .slider {
   background-color: #00d1b2;
 }
 
-input:focus + .slider {
+:host input:focus + .slider {
   box-shadow: 0 0 1px #00d1b2;
 }
 
-input:checked + .slider:before {
+:host input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
 
 /* Rounded sliders */
-.slider.round {
+:host .slider.round {
   border-radius: 34px;
 }
 
-.slider.round:before {
+:host .slider.round:before {
   border-radius: 50%;
 }
 
-.pb10 {
+:host .pb10 {
   padding-bottom: 10px;
 }
 
-.flex {
+:host .flex {
   display: flex;
 }
 
-.w33p {
+:host .w33p {
   width: 33.33%;
 }
 
-.align-right {
+:host .align-right {
   text-align: right;
 }
 
-.w56p {
+:host .w56p {
   width: 56.33%;
 }
 
-.align-left {
+:host.align-left {
   text-align: left;
 }
 
-.pl10 {
+:host.pl10 {
   padding-left: 10px;
 }
 
-.calendar-nav-next-month > button {
+:host.calendar-nav-next-month > button {
   background-size: 100%;
   height: 25px;
 }
 
-.calendar-nav-previous-month > button {
+:host .calendar-nav-previous-month > button {
   background-size: 100%;
   height: 25px;
 }
 
-.calendar-nav > div {
+:host .calendar-nav > div {
   height: 25px;
   display: flex;
   align-items: center;
 }
 
-.calendar-time-input-cells {
+:host .calendar-time-input-cells {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-.group-input-item {
+:host .group-input-item {
   display: flex;
   background: #f7f7f7;
   height: 34px;
   padding: 2px;
 }
 
-.group-input-item input {
+:host .group-input-item input {
   border: none;
   font-size: 15px;
   text-align: center;
   width: 30px;
 }
 
-.meridian-buttons button {
+:host .meridian-buttons button {
   cursor: pointer;
   background: #f7f7f7;
   border: 0;
@@ -142,19 +141,19 @@ input:checked + .slider:before {
   padding: 3px;
 }
 
-.meridian-buttons div:first-child button {
+:host .meridian-buttons div:first-child button {
   margin-bottom: 2px;
 }
 
-.meridian-buttons button:disabled,
-button[disabled] {
+:host .meridian-buttons button:disabled,
+:host button[disabled] {
   border: 0px solid white;
   background-color: #3b3b98;
   color: white;
   border-radius: 1px;
 }
 
-.group-input-item button {
+:host .group-input-item button {
   cursor: pointer;
   background: #f7f7f7;
   border: solid 1px #f7f7f7;
@@ -168,37 +167,37 @@ button[disabled] {
   padding: 0;
 }
 
-.group-input-item button:hover {
+:host .group-input-item button:hover {
   background-color: lightgray;
 }
 
-.group-input-item button.up-time:before {
+:host .group-input-item button.up-time:before {
   content: "";
   border-width: 0 4px 5px 4px;
   border-style: solid;
   border-color: transparent transparent #303438 transparent;
 }
 
-.group-input-item button.down-time:before {
+:host .group-input-item button.down-time:before {
   content: "";
   border-width: 5px 4px 0 4px;
   border-style: solid;
   border-color: #303438 transparent transparent transparent;
 }
 
-.group-input-item > div {
+:host .group-input-item > div {
   display: flex;
   flex-flow: column;
 }
 
 /* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+:host input::-webkit-outer-spin-button,
+:host input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* Firefox */
-input[type=number] {
+:host input[type=number] {
   -moz-appearance: textfield;
 }

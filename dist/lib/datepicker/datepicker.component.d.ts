@@ -7,6 +7,7 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     value: any;
     startTimePicker: ElementRef;
     endTimePicker: ElementRef;
+    showInitialValue: boolean;
     isRange: boolean;
     hasTime: boolean;
     startDate: any;
@@ -19,11 +20,14 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     timeLabel: string;
     clearLabel: string;
     includeEndDate: boolean;
+    meridianTime: boolean;
+    formatInputDate: string;
+    formatInputTime: string;
     emitSelected: EventEmitter<any>;
     isOpen: boolean;
     navDate: any;
     weekDaysHeaderArr: Array<string>;
-    gridArr: any;
+    dataMonths: any;
     selectedDate: any;
     canAccessPrevious: boolean;
     canAccessNext: boolean;
@@ -42,7 +46,12 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     endTime: any;
     isInvalid: boolean;
     includeTime: boolean;
-    formatInputDate: string;
+    minInputHour: number;
+    maxInputHour: number;
+    valueInputHour: any;
+    minInputMinute: number;
+    maxInputMinute: number;
+    valueInputMinute: any;
     /**
      * ControlAccessor
      */
@@ -63,8 +72,14 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     setDisabledState(isDisabled: boolean): void;
     /**
      *
-     * @param value
+     * @param num
+     * @param mode
      */
+    addOrSubHour: (num: number, mode: string) => void;
+    addOrSubMinute: (num: number, mode: string) => void;
+    checkHourValidate: ($event: any, mode: any) => void;
+    checkMinuteValidate: ($event: any, mode: string) => void;
+    changeMeridianTime: (newMeridian: any, mode: any) => void;
     setOptions(): void;
     /**
      * Concat values date to string format for show in input
@@ -72,11 +87,11 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     concatValueInput: () => void;
     setAccess(): void;
     changeNavMonth(num: number, mode?: string): void;
-    generateAllYear: () => void;
+    generateAllGrid: () => void;
     canChangeNavMonth(num: number): any;
     makeHeader(): void;
     getDimensions(date: any): void;
-    makeGrid(year: any, month: any): void;
+    makeGridCustom: (year?: any, month?: any) => void;
     isAvailable(num: number): boolean;
     isToday(num: number, month: number, year: number): boolean;
     dateFromNum(num: number, referenceDate: any): any;
@@ -91,13 +106,11 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     canChangeNavMonthLogic(num: any, currentDate: any): any;
     toggleCalendar(): any;
     openCalendar(): any;
-    simulateClicks: () => void;
     closeCalendar(): any;
     changeMode(mode: string): void;
     clear(): void;
     setTime(moment: any, hour?: number, minute?: number): any;
     handleModeChange(): void;
-    simulateClick: (date: string, mode?: string, infinity?: boolean) => any;
     setStartTime(time: any): void;
     setEndTime(time: any): void;
     handleTimeChange(time: any, moment: any, mode: string): void;

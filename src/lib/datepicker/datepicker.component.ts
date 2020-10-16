@@ -1,6 +1,6 @@
-import {Renderer2} from '@angular/core';
-import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { Renderer2 } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import * as moment_ from 'moment';
 
 const moment = moment_;
@@ -21,10 +21,46 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   @Input() value: any = '';
   @ViewChild('startTimePicker') startTimePicker: ElementRef;
   @ViewChild('endTimePicker') endTimePicker: ElementRef;
+  @Input() showInitialValue: boolean;
   @Input() isRange: boolean;
   @Input() hasTime: boolean;
-  @Input() startDate: any;
-  @Input() endDate: any;
+  // tslint:disable-next-line: variable-name
+  public _startDate: any;
+  get startDate(): any {
+    return this._startDate;
+  }
+  @Input()
+  set startDate(value: any) {
+    if (this._startDate === value) {
+      return;
+    }
+    this._startDate = moment(value);
+    if (this._startDate.isValid()) {
+      this.startDateChange.emit(this._startDate);
+      this.reFormatInput();
+    }
+  }
+  @Output()
+  startDateChange = new EventEmitter<any>();
+
+  // tslint:disable-next-line: variable-name
+  public _endDate: any;
+  get endDate(): any {
+    return this._endDate;
+  }
+  @Input()
+  set endDate(value: any) {
+    if (this._endDate === value) {
+      return;
+    }
+    this._endDate = moment(value);
+    if (this._endDate.isValid()) {
+      this.endDateChange.emit(this._endDate);
+      this.reFormatInput();
+    }
+  }
+  @Output()
+  endDateChange = new EventEmitter<any>();
   @Input() minDate: any;
   @Input() maxDate: any;
   @Input() classInput: string;
@@ -44,7 +80,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   selectedDate: any;
   canAccessPrevious = true;
   canAccessNext = true;
-  todayDate = moment().set({hour: 0, minute: 0, second: 0, millisecond: 0});
+  todayDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
   startDay: any;
   endDay: any;
   renderedFlag = true;
@@ -93,7 +129,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
     /**
      * Set startDate and parse
      */
-
+    this.startDate = moment(this.startDate);
     this.navDate = moment();
     this.valueInputHour.start = this.navDate.format('hh');
     this.valueInputMinute.start = this.navDate.format('mm');
@@ -157,7 +193,9 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       this.minDate = this.navDate.clone().startOf('year').subtract(1, 'year');
     }
     // this.applyRange()
-    this.concatValueInput();
+    if (this.showInitialValue) {
+      this.concatValueInput();
+    }
 
   }
 
@@ -215,45 +253,44 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   checkHourValidate = ($event, mode) => {
     const toHour = (mode === 'start') ? 'start' : 'end';
     if (this.meridianTime) {
+      this.valueInputHour[toHour] = $event;
       if ($event <= 12 && $event > 0) {
-        this.valueInputHour[toHour] = $event;
         if (mode === 'start' && this.startDate && this.startDate.format('A') === 'PM') {
           if ($event === 12) {
-            this.startDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+            this.startDate.set({ hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
           } else {
-            this.startDate.set({hour: ($event + 12), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+            this.startDate.set({ hour: ($event + 12), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
           }
         }
         if (mode === 'start' && this.startDate && this.startDate.format('A') === 'AM') {
-          this.startDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+          this.startDate.set({ hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
         }
 
         if (mode === 'end' && this.endDate && this.endDate.format('A') === 'PM') {
           if ($event === 12) {
-            this.endDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+            this.endDate.set({ hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
           } else {
-            this.endDate.set({hour: ($event + 12), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+            this.endDate.set({ hour: ($event + 12), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
           }
         }
         if (mode === 'end' && this.endDate && this.endDate.format('A') === 'AM') {
-          this.endDate.set({hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+          this.endDate.set({ hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
         }
         if (mode === 'start' && this.endDate && this.endDate.format('A') === 'PM') {
-          this.startDate.set({hour: this.valueInputHour[toHour] + 12, minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+          this.startDate.set({ hour: this.valueInputHour[toHour] + 12, minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
+        }
+      }
+    } else {
+      if ($event >= 0 && $event <= 23) {
+        this.valueInputHour[toHour] = $event;
+        if (mode === 'end') {
+          this.endDate.set({ hour: ($event), minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
+        }
+        if (mode === 'start') {
+          this.startDate.set({ hour: this.valueInputHour[toHour], minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
         }
       }
     }
-    // if ($event < 0) {
-    //   this.valueInputHour[toHour] = 23;
-    // } else if ($event > 23) {
-    //   this.valueInputHour[toHour] = 0;
-    // }
-
-    //
-
-    // if (mode === 'end') {
-    //   this.endDate.set({hour: this.valueInputHour[toHour], minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
-    // }
 
     this.reFormatInput();
   };
@@ -267,10 +304,10 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       this.valueInputMinute[toHour] = 0;
     }
     if (mode === 'start') {
-      this.startDate.set({minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+      this.startDate.set({ minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
     }
     if (mode === 'end') {
-      this.endDate.set({minute: this.valueInputMinute[toHour], second: 0, millisecond: 0});
+      this.endDate.set({ minute: this.valueInputMinute[toHour], second: 0, millisecond: 0 });
     }
     this.reFormatInput();
   };
@@ -307,11 +344,15 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   concatValueInput = () => {
     const concatValue = [
       this.startDate.format(this.formatInputDate),
-      (this.endDate) ? '  -  ' : '',
-      (this.endDate) ? this.endDate.format(this.formatInputDate) : ''
+      (this.endDate && this.endDate.isValid()) ? '  -  ' : '',
+      (this.endDate && this.endDate.isValid()) ? this.endDate.format(this.formatInputDate) : ''
     ];
     this.value = concatValue.join('');
     this.isInvalid = !(this.value.length);
+    this.selected = {
+      startDate: (this.startDate && this.startDate.isValid()) ? this.startDate.toDate() : null,
+      endDate: (this.endDate && this.endDate.isValid()) ? this.endDate.toDate() : null
+    };
 
   };
 
@@ -431,7 +472,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   isToday(num: number, month: number, year: number): boolean {
     const dateToCheck = moment(this.dateFromDayAndMonthAndYear(num, month, year));
-    return dateToCheck.isSame(moment().set({hour: 0, minute: 0, second: 0, millisecond: 0}));
+    return dateToCheck.isSame(moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
   }
 
   dateFromNum(num: number, referenceDate: any): any {
@@ -505,7 +546,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   generateDate(day: any, date: any) {
     let generatedDate = this.dateFromDayAndMonthAndYear(day.value, day.month, day.year);
     if (date) {
-      generatedDate = generatedDate.set({hour: date.hour(), minute: date.minute()});
+      generatedDate = generatedDate.set({ hour: date.hour(), minute: date.minute() });
     }
     return generatedDate;
   }
@@ -537,9 +578,9 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   dateFromDayAndMonthAndYear(day, month, year) {
-    let timeObject = {hour: 0, minute: 0, second: 0, millisecond: 0};
+    let timeObject = { hour: 0, minute: 0, second: 0, millisecond: 0 };
     if (this.includeTime) {
-      timeObject = {hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0};
+      timeObject = { hour: this.startDate.hour(), minute: this.startDate.minute(), second: 0, millisecond: 0 };
       this.startDate.format('h:mm A');
     }
     return moment(`${year}-${month}-${day}`, 'YYYY-M-DD').set(timeObject);
@@ -612,6 +653,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   toggleCalendar(): any {
     this.isOpen = !this.isOpen;
+    this.reFormatInput();
   }
 
   openCalendar(): any {
@@ -621,7 +663,9 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   closeCalendar(): any {
     this.isOpen = false;
+    this.reFormatInput();
     this.emitSelected.emit(this.selected);
+
   }
 
   changeMode(mode: string) {
@@ -646,7 +690,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
   }
 
   setTime(moment, hour: number = 0, minute: number = 0) {
-    return moment.set({hour, minute, second: 0, millisecond: 0});
+    return moment.set({ hour, minute, second: 0, millisecond: 0 });
   }
 
   handleModeChange() {
@@ -682,7 +726,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       return;
     }
     time = time.replace(/[^a-zA-Z0-9]/g, '');
-    moment.set({hour: 0, minute: 0, second: 0, millisecond: 0});
+    moment.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
     let lastTwo = time.substr(time.length - 2).toUpperCase();
     let last = time.substr(time.length - 1).toUpperCase();
     const hasLastTwo = ['AM', 'PM'].includes(lastTwo);
@@ -702,7 +746,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
       case 1:
         moment
           = isAm ? this.setTime(moment, Number(time)) :
-          this.setTime(moment, Number(time) + 12);
+            this.setTime(moment, Number(time) + 12);
         break;
       case 2:
         if (last >= 6) {
@@ -712,15 +756,15 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         if (time === 12) {
           moment
             = isAm ? this.setTime(moment, 0) :
-            this.setTime(moment, 12);
+              this.setTime(moment, 12);
         } else if (time < 12) {
           moment
             = isAm ? this.setTime(moment, Number(time)) :
-            this.setTime(moment, Number(time) + 12);
+              this.setTime(moment, Number(time) + 12);
         } else {
           moment
             = isAm ? this.setTime(moment, Number(time[0]), Number(last)) :
-            this.setTime(moment, Number(time[0]) + 12, Number(last));
+              this.setTime(moment, Number(time[0]) + 12, Number(last));
         }
         break;
       case 3:
@@ -730,7 +774,7 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
         } else {
           moment
             = isAm ? this.setTime(moment, Number(time[0]), Number(lastTwo)) :
-            this.setTime(moment, Number(time[0]) + 12, Number(lastTwo));
+              this.setTime(moment, Number(time[0]) + 12, Number(lastTwo));
         }
         break;
       case 4:
