@@ -1,17 +1,24 @@
-import { Renderer2 } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { AfterContentChecked } from '@angular/core';
 import { OnInit, EventEmitter, ElementRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import * as moment_ from 'moment';
-export declare class DatepickerComponent implements OnInit, ControlValueAccessor {
-    private renderer;
+export declare class DatepickerComponent implements OnInit, ControlValueAccessor, AfterContentChecked {
+    private cdr;
     value: any;
     startTimePicker: ElementRef;
     endTimePicker: ElementRef;
     showInitialValue: boolean;
     isRange: boolean;
     hasTime: boolean;
-    startDate: any;
-    endDate: any;
+    _startDate: any;
+    get startDate(): any;
+    set startDate(value: any);
+    startDateChange: EventEmitter<any>;
+    _endDate: any;
+    get endDate(): any;
+    set endDate(value: any);
+    endDateChange: EventEmitter<any>;
     minDate: any;
     maxDate: any;
     classInput: string;
@@ -59,7 +66,8 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     isDisabled: boolean;
     onChange: (_: any) => void;
     onTouch: () => void;
-    constructor(renderer: Renderer2);
+    constructor(cdr: ChangeDetectorRef);
+    ngAfterContentChecked(): void;
     ngOnInit(): void;
     /**
      *

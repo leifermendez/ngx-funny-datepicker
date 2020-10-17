@@ -62,11 +62,19 @@
         </div>
       </div>
       <div class="zone-preview-dates divider">
-        <div class="child">
+
+        <div class="child" *ngIf="startDate && startDate.isValid()">
           <div class="calendar-child-day">{{startDate?.format('D')}}</div>
           <div>
             <div class="calendar-child-month">{{startDate?.format('MMMM YYYY')}}</div>
             <div class="calendar-child-week">{{startDate?.format('dddd')}}</div>
+          </div>
+        </div>
+        <div class="child" *ngIf="!startDate || !startDate.isValid()">
+          <div class="calendar-child-day">{{navDate?.format('D')}}</div>
+          <div>
+            <div class="calendar-child-month">{{navDate?.format('MMMM YYYY')}}</div>
+            <div class="calendar-child-week">{{navDate?.format('dddd')}}</div>
           </div>
         </div>
         <div class="child">
@@ -76,7 +84,7 @@
         </div>
       </div>
       <div class="zone-preview-dates divider" *ngIf="includeEndDate">
-        <div class="child">
+        <div class="child" *ngIf="endDate && endDate.isValid()">
           <div class="calendar-child-day">{{endDate?.format('D')}}</div>
           <div>
             <div class="calendar-child-month">{{endDate?.format('MMMM YYYY')}}</div>
