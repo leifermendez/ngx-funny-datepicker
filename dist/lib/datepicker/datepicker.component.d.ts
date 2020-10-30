@@ -11,11 +11,11 @@ export declare class DatepickerComponent implements OnInit, ControlValueAccessor
     showInitialValue: boolean;
     isRange: boolean;
     hasTime: boolean;
-    _startDate: any;
+    startDatePrivate: any;
     get startDate(): any;
     set startDate(value: any);
     startDateChange: EventEmitter<any>;
-    _endDate: any;
+    endDatePrivate: any;
     get endDate(): any;
     set endDate(value: any);
     endDateChange: EventEmitter<any>;

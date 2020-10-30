@@ -335,7 +335,6 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor, AfterC
 
   setOptions() {
     moment.locale(this.locale);
-    ;
     this.generateAllGrid();
     this.formatInputTime = (this.meridianTime) ? `D MMM, YYYY hh:mm A` : `D MMM, YYYY HH:mm`;
   }

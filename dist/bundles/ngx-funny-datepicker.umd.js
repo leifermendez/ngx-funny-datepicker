@@ -223,11 +223,14 @@
              * Concat values date to string format for show in input
              */
             this.concatValueInput = function () {
-                var concatValue = [
-                    _this.startDate.format(_this.formatInputDate),
-                    (_this.endDate && _this.endDate.isValid()) ? '  -  ' : '',
-                    (_this.endDate && _this.endDate.isValid()) ? _this.endDate.format(_this.formatInputDate) : ''
-                ];
+                var concatValue = [];
+                if (_this.startDate && _this.startDate.isValid()) {
+                    concatValue = [
+                        _this.startDate.format(_this.formatInputDate),
+                        (_this.endDate && _this.endDate.isValid()) ? '  -  ' : '',
+                        (_this.endDate && _this.endDate.isValid()) ? _this.endDate.format(_this.formatInputDate) : ''
+                    ];
+                }
                 _this.value = concatValue.join('');
                 _this.isInvalid = !(_this.value.length);
                 _this.selected = {
@@ -244,9 +247,6 @@
             this.makeGridCustom = function (year, month) {
                 if (year === void 0) { year = null; }
                 if (month === void 0) { month = null; }
-                /**
-                 * Fix
-                 */
                 var dateOfTurn = moment(year + "-" + month + "-01", 'YYYY-M-DD');
                 /**
                  * Is OK
@@ -259,48 +259,48 @@
                  */
                 if (!_this.dataMonths[year].hasOwnProperty(month)) {
                     _this.dataMonths[year][month] = [];
-                    /**
-                     * Fix
-                     */
-                    var firstDayDate = moment(dateOfTurn).startOf('month');
-                    var lastDayDate = moment(dateOfTurn).endOf('month');
-                    _this.dataMonths[year]["initialEmptyCells" + month] = firstDayDate.weekday();
-                    _this.dataMonths[year]["lastEmptyCells" + month] = 6 - lastDayDate.weekday();
-                    var initEmptyCell = _this.dataMonths[year]["initialEmptyCells" + month];
-                    var lastEmptyCell = _this.dataMonths[year]["lastEmptyCells" + month];
-                    _this.dataMonths[year]["arrayLength" + month] = initEmptyCell + lastEmptyCell + dateOfTurn.daysInMonth();
-                    var arrayLengths = _this.dataMonths[year]["arrayLength" + month];
-                    _this.getDimensions(dateOfTurn);
-                    for (var i = 0; i < arrayLengths; i++) {
-                        var obj = {};
-                        if (i < initEmptyCell || i > initEmptyCell + dateOfTurn.daysInMonth() - 1) {
-                            obj.value = 0;
-                            obj.available = false;
-                            obj.isToday = false;
-                        }
-                        else {
-                            obj.value = i - initEmptyCell + 1;
-                            obj.available = _this.isAvailable(i - initEmptyCell + 1);
-                            obj.isToday = _this.isToday(i - initEmptyCell + 1, month, year);
-                            obj.month = month;
-                            obj.date = dateOfTurn;
-                            obj.year = year;
-                            obj.isActive = false;
-                            if (_this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(_this.startDate)) {
-                                _this.startDay = obj;
-                            }
-                            if (_this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(_this.endDate)) {
-                                _this.endDay = obj;
-                            }
-                            if (obj.isToday && !_this.startDay && !_this.endDay) {
-                                _this.startDay = obj;
-                                _this.endDay = obj;
-                                obj.isActive = true;
-                            }
-                        }
-                        obj.inRange = false;
-                        _this.dataMonths[year][month].push(obj);
+                }
+                /**
+                 * Fix
+                 */
+                var firstDayDate = moment(dateOfTurn).startOf('month');
+                var lastDayDate = moment(dateOfTurn).endOf('month');
+                _this.dataMonths[year]["initialEmptyCells" + month] = firstDayDate.weekday();
+                _this.dataMonths[year]["lastEmptyCells" + month] = 6 - lastDayDate.weekday();
+                var initEmptyCell = _this.dataMonths[year]["initialEmptyCells" + month];
+                var lastEmptyCell = _this.dataMonths[year]["lastEmptyCells" + month];
+                _this.dataMonths[year]["arrayLength" + month] = initEmptyCell + lastEmptyCell + dateOfTurn.daysInMonth();
+                var arrayLengths = _this.dataMonths[year]["arrayLength" + month];
+                _this.getDimensions(dateOfTurn);
+                for (var i = 0; i < arrayLengths; i++) {
+                    var obj = {};
+                    if (i < initEmptyCell || i > initEmptyCell + dateOfTurn.daysInMonth() - 1) { // 0 < 0 NO || 0 > (0-1) SI
+                        obj.value = 0;
+                        obj.available = false;
+                        obj.isToday = false;
                     }
+                    else {
+                        obj.value = i - initEmptyCell + 1;
+                        obj.available = _this.isAvailable(i - initEmptyCell + 1);
+                        obj.isToday = _this.isToday(i - initEmptyCell + 1, month, year);
+                        obj.month = month;
+                        obj.date = dateOfTurn;
+                        obj.year = year;
+                        obj.isActive = false;
+                        if (_this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(_this.startDate)) {
+                            _this.startDay = obj;
+                        }
+                        if (_this.dateFromDayAndMonthAndYear(obj.value, month, year).isSame(_this.endDate)) {
+                            _this.endDay = obj;
+                        }
+                        if (obj.isToday && !_this.startDay && !_this.endDay) {
+                            _this.startDay = obj;
+                            _this.endDay = obj;
+                            obj.isActive = true;
+                        }
+                    }
+                    obj.inRange = false;
+                    _this.dataMonths[year][month].push(obj);
                 }
             };
             this.reFormatInput = function () {
@@ -310,15 +310,15 @@
         }
         Object.defineProperty(DatepickerComponent.prototype, "startDate", {
             get: function () {
-                return this._startDate;
+                return this.startDatePrivate;
             },
             set: function (value) {
-                if (this._startDate === value) {
+                if (this.startDatePrivate === value) {
                     return;
                 }
-                this._startDate = moment(value);
-                if (this._startDate.isValid()) {
-                    this.startDateChange.emit(this._startDate);
+                this.startDatePrivate = moment(value);
+                if (this.startDatePrivate.isValid()) {
+                    this.startDateChange.emit(this.startDatePrivate);
                     this.reFormatInput();
                 }
             },
@@ -327,15 +327,15 @@
         });
         Object.defineProperty(DatepickerComponent.prototype, "endDate", {
             get: function () {
-                return this._endDate;
+                return this.endDatePrivate;
             },
             set: function (value) {
-                if (this._endDate === value) {
+                if (this.endDatePrivate === value) {
                     return;
                 }
-                this._endDate = moment(value);
-                if (this._endDate.isValid()) {
-                    this.endDateChange.emit(this._endDate);
+                this.endDatePrivate = moment(value);
+                if (this.endDatePrivate.isValid()) {
+                    this.endDateChange.emit(this.endDatePrivate);
                     this.reFormatInput();
                 }
             },
@@ -346,12 +346,12 @@
             this.cdr.detectChanges();
         };
         DatepickerComponent.prototype.ngOnInit = function () {
+            this.navDate = moment();
             this.setOptions();
             this.makeHeader();
             /**
              * Set startDate and parse
              */
-            this.navDate = moment();
             this.valueInputHour.start = this.navDate.format('hh');
             this.valueInputMinute.start = this.navDate.format('mm');
             this.valueInputMinute.end = this.navDate.format('mm');
@@ -405,13 +405,6 @@
             }
             this.currentMonth = this.navDate.month();
             this.currentYear = this.navDate.year();
-            if (!this.maxDate) {
-                this.maxDate = this.navDate.clone().endOf('year').add(1, 'year');
-            }
-            if (!this.minDate) {
-                this.minDate = this.navDate.clone().startOf('year').subtract(1, 'year');
-            }
-            // this.applyRange()
             if (this.showInitialValue) {
                 this.concatValueInput();
             }
@@ -446,8 +439,6 @@
             moment.locale(this.locale);
             this.generateAllGrid();
             this.formatInputTime = (this.meridianTime) ? "D MMM, YYYY hh:mm A" : "D MMM, YYYY HH:mm";
-            // this.includeEndDate = false;
-            // this.includeTime = false;
         };
         DatepickerComponent.prototype.setAccess = function () {
             this.canAccessPrevious = this.canChangeNavMonth(-1);
@@ -459,6 +450,9 @@
                 this.navDate.add(num, 'month');
                 this.currentMonth = this.navDate.month() + 1;
                 this.currentYear = this.navDate.year();
+                if (this.dataMonths.hasOwnProperty(this.currentYear) && this.dataMonths[this.currentYear].hasOwnProperty(this.currentMonth)) {
+                    this.dataMonths[this.currentYear][this.currentMonth] = [];
+                }
                 this.makeGridCustom(this.currentYear, this.currentMonth);
             }
         };
@@ -804,7 +798,7 @@
     DatepickerComponent.decorators = [
         { type: i0.Component, args: [{
                     selector: 'ngx-funny-datepicker',
-                    template: "<!-- ********* INPUT FROM DATE Collaborator https://github.com/leifermendez ***************** --->\n<input (click)=\"openCalendar()\" readonly spellcheck=\"false\" class=\"omit-trigger-outside input-date-funny {{classInput}}\"\n  autocomplete=\"nope\" [value]=\"value\" [disabled]=\"isDisabled\" (input)=\"onInput($event.target.value)\" [ngClass]=\"{\n    'date-picker-valid ng-valid': !isInvalid,\n     'date-picker-invalid ng-invalid': isInvalid,\n     'funny-range':includeEndDate,\n     'ng-opened': isOpen,\n     'ng-touched': onTouched,\n     'ng-untouched': !onTouched\n    }\" type=\"text\">\n\n<!--- *************** CALENDAR ELEMENTS Author https://github.com/mokshithpyla ************* --->\n<div (clickOutside)=\"closeCalendar()\" class=\"calendar\" *ngIf=\"isOpen\">\n  <!-- **** CALENDAR NAVIGATION ****-->\n  <div class=\"calendar-nav\">\n    <div class=\"calendar-nav-previous-month\">\n      <button type=\"button\" class=\"button is-text\" (click)=\"changeNavMonth(-1)\" [disabled]=\"!canAccessPrevious\">\n        <i class=\"fa fa-chevron-left\"></i>\n      </button>\n    </div>\n    <div>{{navDate.format('MMMM YYYY')}}</div>\n    <div class=\"calendar-nav-next-month\">\n      <button type=\"button\" class=\"button is-text\" (click)=\"changeNavMonth(1)\" [disabled]=\"!canAccessNext\">\n        <i class=\"fa fa-chevron-right\"></i>\n      </button>\n    </div>\n  </div>\n\n  <!--- **** CALENDAR CONTAINER ****-->\n\n  <div class=\"calendar-container\">\n    <div class=\"calendar-header\">\n      <div class=\"calendar-date\" *ngFor=\"let day of weekDaysHeaderArr\" [innerText]=\"day\"></div>\n    </div>\n    <div class=\"calendar-body\">\n      <!---**** LOAD TEMPLATE*** --->\n      <ng-container *ngTemplateOutlet=\"templateCalendar;context:{\n      data:dataMonths,\n      year:navDate.format('YYYY'),\n      month:navDate.format('M'),\n      includeEndDate:includeEndDate,\n      startDay:null,\n      endDate:null}\"></ng-container>\n    </div>\n\n    <div class=\"footer-calendar\">\n      <div class=\"flex justify-content-between options-bar divider\">\n        <div class=\"flex\">\n          <div class=\"label-placeholder label-option pr-25\">\n            <input type=\"checkbox\" [(ngModel)]=\"includeEndDate\" (change)=\"handleModeChange()\">\n            <small>{{rangeLabel}}</small>\n          </div>\n          <div class=\"label-placeholder label-option pr-25\">\n            <input\n              (change)=\"reFormatInput();handleTimeChange(startTime, startDate, 'start');handleTimeChange(endTime, endDate, 'end')\"\n              [(ngModel)]=\"includeTime\" type=\"checkbox\">\n            <small>{{timeLabel}}</small>\n          </div>\n        </div>\n        <div class=\"label-placeholder label-option pr-25\">\n          <div (click)=\"clear()\">{{clearLabel}}</div>\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\">\n\n        <div class=\"child\" *ngIf=\"startDate && startDate.isValid()\">\n          <div class=\"calendar-child-day\">{{startDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{startDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{startDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\" *ngIf=\"!startDate || !startDate.isValid()\">\n          <div class=\"calendar-child-day\">{{navDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{navDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{navDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n          <ng-container\n            *ngTemplateOutlet=\"templateTimeInput;context:{mode:'start',startDate:startDate,timeShow:includeTime}\">\n          </ng-container>\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\" *ngIf=\"includeEndDate\">\n        <div class=\"child\">\n          <div class=\"calendar-child-day\">{{endDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{endDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{endDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n          <ng-container *ngTemplateOutlet=\"templateTimeInput;context:{mode:'end',endDate:endDate,timeShow:includeTime}\">\n          </ng-container>\n        </div>\n      </div>\n    </div>\n  </div>\n\n</div>\n\n<!--- ********** TEMPLATE BODY CALENDAR*************** -->\n<ng-template #templateCalendar let-data=\"data\" let-year=\"year\" let-includedend=\"includeEndDate\" let-month=\"month\"\n  let-start=\"startDay\" let-end=\"endDate\">\n  <ng-container *ngIf=\"includeEndDate\">\n    <div *ngFor=\"let day of data[year][month]\"\n      class=\"calendar-date calendar-day-not-range-{{year}}-{{month}}-{{day?.value}}\" [ngClass]=\"{\n          'is-disabled': !day?.available,\n          'calendar-range': day?.inRange,\n          'calendar-range-start': day?.value === start?.value && day?.month === start?.month && day?.year === start?.year ,\n          'calendar-range-end': day?.value === end?.value && day?.month === end?.month && day?.year === end?.year}\">\n      <button type=\"button\" *ngIf=\"day.value !== 0\" class=\"date-item\"\n        [ngClass]=\"{'is-active': day?.isActive, 'is-today': day?.isToday}\" (click)=\"selectDay(day)\">\n        {{day.value}}</button>\n      <button type=\"button\" *ngIf=\"day?.value === 0\" class=\"date-item\"></button>\n    </div>\n  </ng-container>\n\n  <ng-container *ngIf=\"!includeEndDate\">\n    <div *ngFor=\"let day of data[year][month]\" class=\"calendar-date\" [ngClass]=\"{'is-disabled': !day?.available }\">\n      <button *ngIf=\"day?.value !== 0\" class=\"date-item\" type=\"button\"\n        [ngClass]=\"{'is-active': day?.isActive, 'is-today': day?.isToday}\"\n        (click)=\"selectDay(day)\">{{day?.value}}</button>\n      <button type=\"button\" *ngIf=\"day?.value === 0\" class=\"date-item\"></button>\n    </div>\n  </ng-container>\n</ng-template>\n<!--- ********** TEMPLATE INPUT TIME*************** -->\n<ng-template #templateTimeInput let-mode=\"mode\" let-show=\"timeShow\" let-start=\"startDate\" let-end=\"endDate\">\n\n  <ng-container *ngIf=\"show\">\n    <div class=\"meridian-buttons\" *ngIf=\"meridianTime && mode === 'start'\">\n      <div>\n        <button (click)=\"changeMeridianTime('AM','start')\" [disabled]=\"startDate && startDate.format('A') === 'AM'\"\n          type=\"button\">AM\n        </button>\n      </div>\n      <div>\n        <button (click)=\"changeMeridianTime('PM','start')\" [disabled]=\"startDate && startDate.format('A') === 'PM'\"\n          type=\"button\">PM\n        </button>\n      </div>\n    </div>\n    <div class=\"meridian-buttons\" *ngIf=\"meridianTime && endDate && mode === 'end'\">\n      <div>\n        <button (click)=\"changeMeridianTime('AM','end')\" [disabled]=\"endDate && endDate.format('A') === 'AM'\"\n          type=\"button\">AM\n        </button>\n      </div>\n      <div>\n        <button (click)=\"changeMeridianTime('PM','end')\" [disabled]=\"endDate && endDate.format('A') === 'PM'\"\n          type=\"button\">PM\n        </button>\n      </div>\n    </div>\n    <div class=\"calendar-time-input-cells\" *ngIf=\"mode === 'start'\">\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkHourValidate($event,'start')\"\n          [max]=\"maxInputHour\" [min]=\"minInputHour\" [(ngModel)]=\"valueInputHour.start\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubHour(1,'start')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubHour(-1,'start')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkMinuteValidate($event,'start')\"\n          [max]=\"maxInputMinute\" [min]=\"minInputMinute\" [(ngModel)]=\"valueInputMinute.start\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubMinute(1,'start')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubMinute(-1,'start')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n    </div>\n    <div class=\"calendar-time-input-cells\" *ngIf=\"endDate && mode === 'end'\">\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkHourValidate($event,'end')\"\n          type=\"button\" [max]=\"maxInputHour\" [min]=\"minInputHour\" [(ngModel)]=\"valueInputHour.end\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubHour(1,'end')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubHour(-1,'end')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkMinuteValidate($event,'end')\"\n          [max]=\"maxInputMinute\" [min]=\"minInputMinute\" [(ngModel)]=\"valueInputMinute.end\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubMinute(1,'end')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubMinute(-1,'end')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n    </div>\n  </ng-container>\n\n</ng-template>\n",
+                    template: "<!-- ********* INPUT FROM DATE Collaborator https://github.com/leifermendez ***************** --->\n<input (click)=\"openCalendar()\" readonly spellcheck=\"false\" class=\"omit-trigger-outside input-date-funny {{classInput}}\"\n  autocomplete=\"nope\" [value]=\"value\" [disabled]=\"isDisabled\" (input)=\"onInput($event.target.value)\" [ngClass]=\"{\n    'date-picker-valid ng-valid': !isInvalid,\n     'date-picker-invalid ng-invalid': isInvalid,\n     'funny-range':includeEndDate,\n     'ng-opened': isOpen,\n     'ng-touched': onTouched,\n     'ng-untouched': !onTouched\n    }\" type=\"text\">\n\n<!--- *************** CALENDAR ELEMENTS Author https://github.com/mokshithpyla ************* --->\n<div (clickOutside)=\"closeCalendar()\" class=\"calendar\" *ngIf=\"isOpen\">\n  <!-- **** CALENDAR NAVIGATION ****-->\n  <div class=\"calendar-nav\">\n    <div class=\"calendar-nav-previous-month\">\n      <button type=\"button\" class=\"button is-text\" (click)=\"changeNavMonth(-1)\" [disabled]=\"!canAccessPrevious\">\n        <i class=\"fa fa-chevron-left\"></i>\n      </button>\n    </div>\n    <div>{{navDate.format('MMMM YYYY')}}</div>\n    <div class=\"calendar-nav-next-month\">\n      <button type=\"button\" class=\"button is-text\" (click)=\"changeNavMonth(1)\" [disabled]=\"!canAccessNext\">\n        <i class=\"fa fa-chevron-right\"></i>\n      </button>\n    </div>\n  </div>\n\n  <!--- **** CALENDAR CONTAINER ****-->\n\n  <div class=\"calendar-container\">\n    <div class=\"calendar-header\">\n      <div class=\"calendar-date\" *ngFor=\"let day of weekDaysHeaderArr\" [innerText]=\"day\"></div>\n    </div>\n    <div class=\"calendar-body\">\n      <!---**** LOAD TEMPLATE*** --->\n      <ng-container *ngTemplateOutlet=\"templateCalendar;context:{\n      data:dataMonths,\n      year:navDate.format('YYYY'),\n      month:navDate.format('M'),\n      includeEndDate:includeEndDate,\n      startDay:null,\n      endDate:null}\"></ng-container>\n    </div>\n\n    <div class=\"footer-calendar\">\n      <div class=\"flex justify-content-between options-bar divider\">\n        <div class=\"flex\">\n          <div class=\"label-placeholder label-option pr-25\">\n            <input type=\"checkbox\" [(ngModel)]=\"includeEndDate\" (change)=\"handleModeChange()\">\n            <small>{{rangeLabel}}</small>\n          </div>\n          <div class=\"label-placeholder label-option pr-25\">\n            <input\n              (change)=\"reFormatInput();handleTimeChange(startTime, startDate, 'start');handleTimeChange(endTime, endDate, 'end')\"\n              [(ngModel)]=\"includeTime\" type=\"checkbox\">\n            <small>{{timeLabel}}</small>\n          </div>\n        </div>\n        <div class=\"label-placeholder label-option pr-25\">\n          <div (click)=\"clear()\">{{clearLabel}}</div>\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\">\n\n        <div class=\"child\" *ngIf=\"startDate && startDate.isValid()\">\n          <div class=\"calendar-child-day\">{{startDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{startDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{startDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\" *ngIf=\"!startDate || !startDate.isValid()\">\n          <div class=\"calendar-child-day\">{{navDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{navDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{navDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n          <ng-container\n            *ngTemplateOutlet=\"templateTimeInput;context:{mode:'start',startDate:startDate,timeShow:includeTime}\">\n          </ng-container>\n        </div>\n      </div>\n      <div class=\"zone-preview-dates divider\" *ngIf=\"includeEndDate\">\n        <div class=\"child\" *ngIf=\"endDate && endDate.isValid()\">\n          <div class=\"calendar-child-day\">{{endDate?.format('D')}}</div>\n          <div>\n            <div class=\"calendar-child-month\">{{endDate?.format('MMMM YYYY')}}</div>\n            <div class=\"calendar-child-week\">{{endDate?.format('dddd')}}</div>\n          </div>\n        </div>\n        <div class=\"child\">\n          <ng-container *ngTemplateOutlet=\"templateTimeInput;context:{mode:'end',endDate:endDate,timeShow:includeTime}\">\n          </ng-container>\n        </div>\n      </div>\n    </div>\n  </div>\n\n</div>\n\n<!--- ********** TEMPLATE BODY CALENDAR*************** -->\n<ng-template #templateCalendar let-data=\"data\" let-year=\"year\" let-includedend=\"includeEndDate\" let-month=\"month\"\n  let-start=\"startDay\" let-end=\"endDate\">\n  <ng-container *ngIf=\"includeEndDate\">\n    <div *ngFor=\"let day of data[year][month]\"\n      class=\"calendar-date calendar-day-not-range-{{year}}-{{month}}-{{day?.value}}\" [ngClass]=\"{\n          'is-disabled': !day?.available,\n          'calendar-range': day?.inRange,\n          'calendar-range-start': day?.value === start?.value && day?.month === start?.month && day?.year === start?.year ,\n          'calendar-range-end': day?.value === end?.value && day?.month === end?.month && day?.year === end?.year}\">\n      <button type=\"button\" *ngIf=\"day.value !== 0\" class=\"date-item\"\n        [ngClass]=\"{'is-active': day?.isActive, 'is-today': day?.isToday}\" (click)=\"selectDay(day)\">\n        {{day.value}}</button>\n      <button type=\"button\" *ngIf=\"day?.value === 0\" class=\"date-item\"></button>\n    </div>\n  </ng-container>\n\n  <ng-container *ngIf=\"!includeEndDate\">\n    <div *ngFor=\"let day of data[year][month]\" class=\"calendar-date\" [ngClass]=\"{'is-disabled': !day?.available }\">\n      <button *ngIf=\"day?.value !== 0\" class=\"date-item\" type=\"button\"\n        [ngClass]=\"{'is-active': day?.isActive, 'is-today': day?.isToday}\"\n        (click)=\"selectDay(day)\">{{day?.value}}</button>\n      <button type=\"button\" *ngIf=\"day?.value === 0\" class=\"date-item\"></button>\n    </div>\n  </ng-container>\n</ng-template>\n<!--- ********** TEMPLATE INPUT TIME*************** -->\n<ng-template #templateTimeInput let-mode=\"mode\" let-show=\"timeShow\" let-start=\"startDate\" let-end=\"endDate\">\n\n  <ng-container *ngIf=\"show\">\n    <div class=\"meridian-buttons\" *ngIf=\"meridianTime && mode === 'start'\">\n      <div>\n        <button (click)=\"changeMeridianTime('AM','start')\" [disabled]=\"startDate && startDate.format('A') === 'AM'\"\n          type=\"button\">AM\n        </button>\n      </div>\n      <div>\n        <button (click)=\"changeMeridianTime('PM','start')\" [disabled]=\"startDate && startDate.format('A') === 'PM'\"\n          type=\"button\">PM\n        </button>\n      </div>\n    </div>\n    <div class=\"meridian-buttons\" *ngIf=\"meridianTime && endDate && mode === 'end'\">\n      <div>\n        <button (click)=\"changeMeridianTime('AM','end')\" [disabled]=\"endDate && endDate.format('A') === 'AM'\"\n          type=\"button\">AM\n        </button>\n      </div>\n      <div>\n        <button (click)=\"changeMeridianTime('PM','end')\" [disabled]=\"endDate && endDate.format('A') === 'PM'\"\n          type=\"button\">PM\n        </button>\n      </div>\n    </div>\n    <div class=\"calendar-time-input-cells\" *ngIf=\"mode === 'start'\">\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkHourValidate($event,'start')\"\n          [max]=\"maxInputHour\" [min]=\"minInputHour\" [(ngModel)]=\"valueInputHour.start\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubHour(1,'start')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubHour(-1,'start')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkMinuteValidate($event,'start')\"\n          [max]=\"maxInputMinute\" [min]=\"minInputMinute\" [(ngModel)]=\"valueInputMinute.start\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubMinute(1,'start')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubMinute(-1,'start')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n    </div>\n    <div class=\"calendar-time-input-cells\" *ngIf=\"endDate && mode === 'end'\">\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkHourValidate($event,'end')\"\n          type=\"button\" [max]=\"maxInputHour\" [min]=\"minInputHour\" [(ngModel)]=\"valueInputHour.end\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubHour(1,'end')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubHour(-1,'end')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n      <div class=\"group-input-item\">\n        <input [maxLength]=\"2\" libCheckInput [minLength]=\"2\" (ngModelChange)=\"checkMinuteValidate($event,'end')\"\n          [max]=\"maxInputMinute\" [min]=\"minInputMinute\" [(ngModel)]=\"valueInputMinute.end\" type=\"number\">\n        <div>\n          <button (click)=\"addOrSubMinute(1,'end')\" type=\"button\" class=\"up-time\"></button>\n          <button (click)=\"addOrSubMinute(-1,'end')\" type=\"button\" class=\"down-time\"></button>\n        </div>\n      </div>\n    </div>\n  </ng-container>\n\n</ng-template>\n",
                     providers: [
                         {
                             provide: forms.NG_VALUE_ACCESSOR,
